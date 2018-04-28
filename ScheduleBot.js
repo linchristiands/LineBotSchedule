@@ -91,7 +91,7 @@ function handleEvent(event) {
   {
     echo.text="Detect user request to show event specified";
   }
-  else if(event.message.text.includes('!showall'))
+  else if(event.message.text.includes('!all'))
   {
     if(eventList.length<=0){
       echo.text="No event planned so far";
