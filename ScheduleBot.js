@@ -38,9 +38,25 @@ function handleEvent(event) {
 
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
-  if(event.message.text.includes('!addevent'))
+  if(event.message.text.includes('!add'))
   {
     echo.text="Detect user request to add event";
+  }
+  else if(event.message.text.includes('!del'))
+  {
+    echo.text="Detect user request to delete event";
+  }
+  else if(event.message.text.includes('!show'))
+  {
+    echo.text="Detect user request to show planned events";
+  }
+  else if(event.message.text.includes('!commands'))
+  {
+    echo.text="Commands to use the bot :"+"\n";
+    echo.text+="!add {eventName} {place} {date} - Add event in the bot's memory"+"\n";
+    echo.text+="!del {eventId} - Delete event in the bot's memory"+"\n";
+    echo.text+="!showall - Show all the events planned"+"\n";
+    echo.text+="!show {eventId} - Show the event specified"+"\n";
   }
   // use reply API
   return client.replyMessage(event.replyToken, echo);
