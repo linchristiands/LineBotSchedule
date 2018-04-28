@@ -95,9 +95,11 @@ function handleEvent(event) {
   {
     if(eventList.length<=0){
       echo.text="No event planned so far";
+      console.log("Empty");
     }
     else
     {
+      console.log("Not Empty");
       var txtEventList="";
       echo.text="Event List : "+"\n";
       eventList.forEach(element => {
@@ -137,7 +139,7 @@ function save(data)
 {
   // save data
   var saveFile = JSON.stringify(data);
-  fs.writeFile('/data.json', saveFile,'utf8', function (err) {
+  fs.writeFile('data.json', saveFile,'utf8', function (err) {
     if (err) throw err;
     console.log('Saved!');
   }); 
