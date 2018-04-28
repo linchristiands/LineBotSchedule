@@ -2,6 +2,7 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
+const fs = require('fs');
 
 // create LINE SDK config from env variables
 const config = {
@@ -15,6 +16,16 @@ const client = new line.Client(config);
 // create Express app
 // about Express itself: https://expressjs.com/
 const app = express();
+
+let eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
+var eventModelData=
+{
+  id:"",
+  name:"",
+  attendees:[],
+  place:"",
+  date:"",
+};
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
@@ -38,9 +49,37 @@ function handleEvent(event) {
 
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
-  if(event.message.text.includes('!add'))
+  var v=false;
+  var input=[];
+  var saveData = [];
+  input=event.message.text.split(/[ ]+/);
+  if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
     echo.text="Detect user request to add event";
+    var name=input[1];
+    var place=input[2];
+    var date=input[3];
+    var LineEvent={
+      name:name,
+      place:place,
+      date:date,
+      attendees:[],
+    };
+    eventList.push(LineEvent);
+  }
+  else if(event.message.text.includes('!modify'))
+  {
+    echo.text="Detect user request to modify event specified";
+    // var idToModify=input[1];
+    // var name=input[2];
+    // var place=input[3];
+    // var date=input[4];
+    // var LineEvent={
+    //   name:name,
+    //   place:place,
+    //   date:date,
+    //   attendees:[],
+    // };
   }
   else if(event.message.text.includes('!del'))
   {
@@ -48,16 +87,51 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!show'))
   {
-    echo.text="Detect user request to show planned events";
+    echo.text="Detect user request to show event specified";
+  }
+  else if(event.message.text.includes('!showall'))
+  {
+    if(eventList.length<=0){
+      echo.text="No event planned so far";
+    }
+    else
+    {
+      var txtEventList="";
+      echo.text="Event List : "+"\n";
+      eventList.forEach(element => {
+        txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place;
+      });
+    }
+  }
+  else if(event.message.text.includes('!attend'))
+  {
+    echo.text="Detect user request to attend to event specified";
   }
   else if(event.message.text.includes('!commands'))
   {
     echo.text="Commands to use the bot :"+"\n";
-    echo.text+="!add {eventName} {place} {date} - Add event in the bot's memory"+"\n";
-    echo.text+="!del {eventId} - Delete event in the bot's memory"+"\n";
+    echo.text+="!add {eventName} {place} {date} - Add event"+"\n";
+    echo.text+="!modify {eventId} {eventName} {place} {date} - Modify event"+"\n";
+    echo.text+="!del {eventId} - Delete event"+"\n";
     echo.text+="!showall - Show all the events planned"+"\n";
-    echo.text+="!show {eventId} - Show the event specified"+"\n";
+    echo.text+="!show {eventId} - Show the specified event "+"\n";
+    echo.text+="!showattendees {eventId} - Show the specified event "+"\n";
+    echo.text+="!attend {eventId} - Add your presence to the specified event"+"\n";
   }
+  else if(event.message.text.includes('!clearAdmin'))
+  {
+   // Clear cache data
+   saveData=[];
+  }
+
+  // save data
+  var saveFile = JSON.stringify(eventList);
+  fs.writeFile('data.json', saveFile,'utf8', function (err) {
+    if (err) throw err;
+    //console.log('Saved!');
+
+  }); 
+
   // use reply API
   return client.replyMessage(event.replyToken, echo);
 }
