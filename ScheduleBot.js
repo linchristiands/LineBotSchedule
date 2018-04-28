@@ -1,48 +1,49 @@
-'use strict'
-const line = require('node-line-bot-api')
-const express = require('express')
-const bodyParser = require('body-parser')
-const app = express()
+'use strict';
 
-// need raw buffer for signature validation
-app.use(bodyParser.json({
-  verify (req, res, buf) {
-    req.rawBody = buf
-  }
-}))
+const line = require('@line/bot-sdk');
+const express = require('express');
 
-// init with auth
-line.init({
-  accessToken: 'yeTB4ca7GdRlYzTk1YxPF+2VNI8J8o9K17A+0c0ApZ+U0eMIyZVCXhPBnJv5bzAdiG4e6V4Mwppe3s6OihdcSN1ctdycBqHBbEXS6ComIVxsNqUT8oIusKmKewWn/xe+UF8VWwSvtlcE07b4Tjw6AwdB04t89/1O/w1cDnyilFU=',
-  // (Optional) for webhook signature validation
-  channelSecret: '7c1bfc82ec2630ba0af69404af64ec16'
-})
-app.get('/',function(req,res){
-  res.sendStatus(200);
-})
-app.get('/callback',function(req,res){
-  res.sendStatus(200);
-})
-app.post('/webhook/', line.validator.validateSignature(), (req, res, next) => {
-  // get content from request body
-  const promises = req.body.events.map(event => {
-    // reply message
-    return line.client
-      .replyMessage({
-        replyToken: event.replyToken,
-        messages: [
-          {
-            type: 'text',
-            text: event.message.text
-          }
-        ]
-      })
-  })
+// create LINE SDK config from env variables
+const config = {
+  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
+  channelSecret: process.env.CHANNEL_SECRET,
+};
+
+// create LINE SDK client
+const client = new line.Client(config);
+
+// create Express app
+// about Express itself: https://expressjs.com/
+const app = express();
+
+// register a webhook handler with middleware
+// about the middleware, please refer to doc
+app.post('/callback', line.middleware(config), (req, res) => {
   Promise
-    .all(promises)
-    .then(() => res.json({success: true}))
-})
+    .all(req.body.events.map(handleEvent))
+    .then((result) => res.json(result))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).end();
+    });
+});
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Example app listening on port 3000!')
-})
+// event handler
+function handleEvent(event) {
+  if (event.type !== 'message' || event.message.type !== 'text') {
+    // ignore non-text-message event
+    return Promise.resolve(null);
+  }
+
+  // create a echoing text message
+  const echo = { type: 'text', text: event.message.text };
+
+  // use reply API
+  return client.replyMessage(event.replyToken, echo);
+}
+
+// listen on port
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`listening on ${port}`);
+});
