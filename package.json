@@ -1,10 +1,10 @@
 {
-  "name": "ScheduleBot",
+  "name": "schedulebot",
   "version": "1.0.0",
   "description": "Scheduling bot for LINE",
   "main": "ScheduleBot.js",
   "scripts": {
-    "start":"node ScheduleBot.js",
+    "start": "node ScheduleBot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,11 +17,11 @@
     "url": "https://git.heroku.com/scdhelpbot/issues"
   },
   "homepage": "https://git.heroku.com/scdhelpbot#readme",
-  "dependencies": {
-    "superagent": "^2.3.0"
-  },
   "devDependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0"
+  },
+  "dependencies": {
+    "node-line-bot-api": "^0.1.4"
   }
 }
