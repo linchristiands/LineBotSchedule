@@ -66,7 +66,7 @@ function handleEvent(event) {
       attendees:[],
     };
     saveData.push(LineEvent);
-    console.log("SaveData:"+(util.inspect(saveData, false, null)));
+    console.log("SaveData:"+(JSON.stringify(saveData, false, null)));
     save(saveData);
   }
   else if(event.message.text.includes('!modify'))
