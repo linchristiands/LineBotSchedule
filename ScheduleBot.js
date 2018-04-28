@@ -66,7 +66,7 @@ function handleEvent(event) {
       attendees:[],
     };
     saveData.push(LineEvent);
-    console.log("SaveData:"+saveData);
+    console.log("SaveData:"+(util.inspect(saveData, false, null)));
     save(saveData);
   }
   else if(event.message.text.includes('!modify'))
@@ -137,9 +137,9 @@ function save(data)
 {
   // save data
   var saveFile = JSON.stringify(data);
-  fs.writeFile('data.json', saveFile,'utf8', function (err) {
+  fs.writeFile('/data.json', saveFile,'utf8', function (err) {
     if (err) throw err;
-    //console.log('Saved!');
+    console.log('Saved!');
   }); 
 }
 // listen on port
