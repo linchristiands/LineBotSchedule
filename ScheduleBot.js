@@ -21,7 +21,8 @@ const app = express();
 app.post('/callback', line.middleware(config), (req, res) => {
   Promise
     .all(req.body.events.map(handleEvent))
-    .then((result) => res.json(result))
+    .then((result) => 
+    res.status(200).json(result))
     .catch((err) => {
       console.error(err);
       res.status(500).end();
@@ -36,7 +37,7 @@ function handleEvent(event) {
   }
 
   // create a echoing text message
-  const echo = { type: 'text', text: "Azerty" };
+  const echo = { type: 'text', text: event.message.text };
 
   // use reply API
   return client.replyMessage(event.replyToken, echo);
