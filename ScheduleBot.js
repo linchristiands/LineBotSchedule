@@ -65,7 +65,8 @@ function handleEvent(event) {
       date:date,
       attendees:[],
     };
-    eventList.push(LineEvent);
+    saveData.push(LineEvent);
+    save(saveData);
   }
   else if(event.message.text.includes('!modify'))
   {
@@ -122,20 +123,24 @@ function handleEvent(event) {
   {
    // Clear cache data
    saveData=[];
+   save(saveData);
   }
 
-  // save data
-  var saveFile = JSON.stringify(eventList);
-  fs.writeFile('data.json', saveFile,'utf8', function (err) {
-    if (err) throw err;
-    //console.log('Saved!');
-
-  }); 
+  
 
   // use reply API
   return client.replyMessage(event.replyToken, echo);
 }
 
+function save(data)
+{
+  // save data
+  var saveFile = JSON.stringify(data);
+  fs.writeFile('data.json', saveFile,'utf8', function (err) {
+    if (err) throw err;
+    //console.log('Saved!');
+  }); 
+}
 // listen on port
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
