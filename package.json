@@ -4,6 +4,7 @@
   "description": "Scheduling bot for LINE",
   "main": "ScheduleBot.js",
   "scripts": {
+    "start":"node ScheduleBot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
