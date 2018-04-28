@@ -20,6 +20,9 @@ line.init({
 app.get('/',function(req,res){
   res.sendStatus(200);
 })
+app.get('/callback',function(req,res){
+  res.sendStatus(200);
+})
 app.post('/webhook/', line.validator.validateSignature(), (req, res, next) => {
   // get content from request body
   const promises = req.body.events.map(event => {
