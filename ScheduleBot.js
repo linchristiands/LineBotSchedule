@@ -17,7 +17,9 @@ line.init({
   // (Optional) for webhook signature validation
   channelSecret: '7c1bfc82ec2630ba0af69404af64ec16'
 })
-
+app.get('/',function(req,res){
+  res.sendStatus(200);
+})
 app.post('/webhook/', line.validator.validateSignature(), (req, res, next) => {
   // get content from request body
   const promises = req.body.events.map(event => {
