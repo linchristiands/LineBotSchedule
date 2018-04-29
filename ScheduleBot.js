@@ -178,9 +178,10 @@ function handleEvent(event) {
 
 function loadDB()
 {
+  console.log("var dburl:"+process.env.DATABASE_URL);
   dbclient.connect();
   console.log("query");
-  dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
+  dbclient.query('select id,name,place,date,attendees from events;', (err, res) => {
     if (err) throw err;
     console.log("Row count:"+res.rowCount);
     for (let row of res.rows) {
