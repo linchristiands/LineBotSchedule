@@ -103,7 +103,7 @@ function handleEvent(event) {
       console.log("Not Empty");
       var txtEventList="";
       echo.text="Event List : "+"\n";
-      for(i=0;i<eventList.length;i++)
+      for(var i=0;i<eventList.length;i++)
       {
         var element=eventList[i];
         txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
