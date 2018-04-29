@@ -141,9 +141,6 @@ function handleEvent(event) {
    saveData=[];
    save(saveData);
   }
-
-  
-
   // use reply API
   return client.replyMessage(event.replyToken, echo);
 }
@@ -152,6 +149,7 @@ function save(data)
 {
   // save data
   var saveFile = JSON.stringify(data);
+  eventList=saveFile;
   fs.writeFile('data.json', saveFile,'utf8', function (err) {
     if (err) throw err;
     console.log('Saved!');
