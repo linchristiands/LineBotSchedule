@@ -182,7 +182,7 @@ function handleEvent(event) {
 function loadDB()
 {
   console.log("QUERY DB CLIENT");
-  dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
+  dbclient.query('SELECT id FROM events;', (err, res) => {
     if (err) {
       console.log(err);
       throw err;
@@ -196,7 +196,7 @@ function loadDB()
       console.log(JSON.stringify(row));
     }
   });
-  dbclient.end();
+
 }
 
 function resetDB()
@@ -204,7 +204,6 @@ function resetDB()
   dbclient.connect();
   dbclient.query('DELETE FROM events;', (err, res) => {
     if (err) throw err;
-    client.end();
   });
   dbclient.end();
 }
