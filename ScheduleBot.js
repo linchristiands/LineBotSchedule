@@ -60,7 +60,7 @@ function handleEvent(event) {
     groupId=event.source.groupId;
   }
   dbclient.connect();
-  // console.log("dbclient:%j",dbclient);
+  console.log("dbclient:%j",dbclient);
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
   var v=false;
