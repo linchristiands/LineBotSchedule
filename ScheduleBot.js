@@ -74,7 +74,6 @@ function handleEvent(event) {
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
-    
     var name=input[1];
     var place=input[2];
     var date=input[3];
@@ -169,7 +168,7 @@ function handleEvent(event) {
   }
 
   // use reply API
-  client.end();
+  //client.end();
   return lineclient.replyMessage(event.replyToken, echo);
 }
 // function load(){
