@@ -4,9 +4,9 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 // const fs = require('fs');
 
-const { Pool } = require('pg');
+const { Client } = require('pg');
 
-const pool = new Pool({
+const dbclient = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
@@ -59,11 +59,14 @@ function handleEvent(event) {
   {
     groupId=event.source.groupId;
   }
+  dbclient.connect();
+  console.log("dbclient:%j",dbclient);
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
   var v=false;
   var input=[];
   var saveData = [];
+  
   console.log("loadDB");
   saveData=loadDB();
 
@@ -178,24 +181,21 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  const dbclient = await pool.connect();
-  console.log("query");
-  dbclient.query('select id,name,place,date,attendees from events;', (err, res) => {
+  dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
     if (err) throw err;
-    console.log("Row count:"+res.rowCount);
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
     }
   });
-  dbclient.release();
+  dbclient.end();
 }
 
 function resetDB()
 {
-  const dbclient = await pool.connect();
+  dbclient.connect();
   dbclient.query('DELETE FROM events;', (err, res) => {
     if (err) throw err;
-    dbclient.end();
+    client.end();
   });
   dbclient.end();
 }
