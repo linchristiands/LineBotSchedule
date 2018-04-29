@@ -18,14 +18,15 @@ const client = new line.Client(config);
 const app = express();
 
 let eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
-var eventModelData=
-{
-  id:"",
-  name:"",
-  attendees:[],
-  place:"",
-  date:"",
-};
+// var eventModelData=
+// {
+//   id:"",
+//   name:"",
+//   attendees:[],
+//   place:"",
+//   date:"",
+//   gpslocation:,
+// };
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
@@ -102,9 +103,12 @@ function handleEvent(event) {
       console.log("Not Empty");
       var txtEventList="";
       echo.text="Event List : "+"\n";
-      eventList.forEach(element => {
-        txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place;
-      });
+      for(i=0;i<eventList.length;i++)
+      {
+        var element=eventList[i];
+        txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
+      }
+      echo.text+=txtEventList;
     }
   }
   else if(event.message.text.includes('!attend'))
