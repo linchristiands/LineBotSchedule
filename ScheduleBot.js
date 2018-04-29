@@ -182,7 +182,7 @@ function handleEvent(event) {
 function loadDB()
 {
   console.log("QUERY DB CLIENT");
-  dbclient.query('SELECT id FROM events;', (err, res) => {
+  dbclient.query('SELECT id,name,place,date FROM events;', (err, res) => {
     if (err) {
       console.log(err);
       throw err;
