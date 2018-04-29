@@ -67,7 +67,7 @@ function handleEvent(event) {
   var input=[];
   var saveData = [];
   
-  console.log("loadDB");
+  // console.log("loadDB");
   saveData=loadDB();
 
   input=event.message.text.split(/[ ]+/);
@@ -181,17 +181,17 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  console.log("QUERY DB CLIENT");
-  dbclient.query('SELECT id,name,place,date FROM events;', (err, res) => {
+  // console.log("QUERY DB CLIENT");
+  dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
     if (err) {
-      console.log(err);
+      // console.log(err);
       throw err;
     }
-    else
-    {
-      console.log("no err");
-      console.log("res:"+res);
-    }
+    // else
+    // {
+    //   console.log("no err");
+    //   console.log("res:"+res);
+    // }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
     }
