@@ -46,13 +46,18 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-
+  var groupId;
+  if(event.source.type=="group")
+  {
+    groupId=event.source.groupId;
+  }
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
   var v=false;
   var input=[];
   var saveData = [];
   saveData=load();
+
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
@@ -61,6 +66,7 @@ function handleEvent(event) {
     var place=input[2];
     var date=input[3];
     var LineEvent={
+      id:saveData.length+1,
       name:name,
       place:place,
       date:date,
@@ -88,9 +94,14 @@ function handleEvent(event) {
   {
     echo.text="Detect user request to delete event";
   }
-  else if(event.message.text.includes('!show'))
+  else if(event.message.text.includes('!show')&&(input.length==2))
   {
     echo.text="Detect user request to show event specified";
+    var id=input[1];
+    var foundData=search(saveData,id);
+    var txtEventList="";
+    txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
+    echo.text+=txtEventList;
   }
   else if(event.message.text.includes('!all'))
   {
@@ -103,9 +114,13 @@ function handleEvent(event) {
       console.log("Not Empty : "+saveData.length);
       var txtEventList="";
       echo.text="Event List : "+"\n";
-      for(var i=0;i<saveData.length;i++)
+      var sortedData=saveData.sort(function(a,b){
+        return new Date(b.date) - new Date(a.date);
+      });
+      
+      for(var i=0;i<sortedData.length;i++)
       {
-        var element=saveData[i];
+        var element=sortedData[i];
         console.log("Element : %j",element);
         txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
       }
@@ -119,8 +134,8 @@ function handleEvent(event) {
   else if(event.message.text.includes('!commands'))
   {
     echo.text="Commands to use the bot :"+"\n";
-    echo.text+="!add {eventName} {place} {date} - Add event"+"\n";
-    echo.text+="!modify {eventId} {eventName} {place} {date} - Modify event"+"\n";
+    echo.text+="!add {eventName} {place} {date(YY-MM-DD)} - Add event"+"\n";
+    echo.text+="!modify {eventId} {eventName} {place} {date(YY-MM-DD)} - Modify event"+"\n";
     echo.text+="!del {eventId} - Delete event"+"\n";
     echo.text+="!showall - Show all the events planned"+"\n";
     echo.text+="!show {eventId} - Show the specified event "+"\n";
@@ -134,8 +149,6 @@ function handleEvent(event) {
    save(saveData);
   }
 
-  
-
   // use reply API
   return client.replyMessage(event.replyToken, echo);
 }
@@ -146,6 +159,11 @@ function load(){
     initArray.push(obj[i]);
   }
   return initArray;
+}
+
+function search(data,id)
+{
+  return data.find(element=> element.id==id);
 }
 
 function save(data)
