@@ -60,7 +60,7 @@ function handleEvent(event) {
     groupId=event.source.groupId;
   }
   dbclient.connect();
-  console.log("dbclient:%j",dbclient);
+  // console.log("dbclient:%j",dbclient);
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
   var v=false;
@@ -68,8 +68,8 @@ function handleEvent(event) {
   var saveData = [];
   
   // console.log("loadDB");
-  saveData=loadDB();
-
+  loadDB(saveData);
+  console.log("savedata:%j",saveData);
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
@@ -168,6 +168,7 @@ function handleEvent(event) {
   }
 
   // use reply API
+  dbclient.end();
   return client.replyMessage(event.replyToken, echo);
 }
 // function load(){
@@ -179,7 +180,7 @@ function handleEvent(event) {
 //   return initArray;
 // }
 
-function loadDB()
+function loadDB(saveData)
 {
   // console.log("QUERY DB CLIENT");
   dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
@@ -194,18 +195,16 @@ function loadDB()
     // }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
+      saveData.push(row);
     }
   });
-
 }
 
 function resetDB()
 {
-  dbclient.connect();
   dbclient.query('DELETE FROM events;', (err, res) => {
     if (err) throw err;
   });
-  dbclient.end();
 }
 
 function search(data,id)
