@@ -184,7 +184,7 @@ function loadDB()
 {
   var temp=[];
   console.log("QUERY DB CLIENT");
-  dbclient.query('select id,name,place,date,attendees from events;', (err, res) => {
+  dbclient.query('select id,name,place from events;', (err, res) => {
     if (err) {
       console.log(err);
       throw err;
