@@ -65,11 +65,13 @@ function handleEvent(event) {
     var name=input[1];
     var place=input[2];
     var date=input[3];
+    var d=date.split("-");
+    var formattedDate = new Date(d[0],d[1],d[2]);
     var LineEvent={
       id:saveData.length+1,
       name:name,
       place:place,
-      date:date,
+      date:formattedDate,
       attendees:[],
     };
     saveData.push(LineEvent);
@@ -100,7 +102,7 @@ function handleEvent(event) {
     var id=input[1];
     var foundData=search(saveData,id);
     var txtEventList="";
-    txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
+    txtEventList+= foundData.id+" - "+foundData.name+" "+foundData.date +" "+foundData.place+"\n";
     echo.text+=txtEventList;
   }
   else if(event.message.text.includes('!all'))
