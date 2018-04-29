@@ -61,7 +61,7 @@ function handleEvent(event) {
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
-    echo.text="Detect user request to add event";
+    
     var name=input[1];
     var place=input[2];
     var date=input[3];
@@ -77,6 +77,7 @@ function handleEvent(event) {
     saveData.push(LineEvent);
     console.log("SaveData:"+(JSON.stringify(saveData, false, null)));
     save(saveData);
+    echo.text="Event added";
   }
   else if(event.message.text.includes('!modify'))
   {
@@ -117,14 +118,15 @@ function handleEvent(event) {
       var txtEventList="";
       echo.text="Event List : "+"\n";
       var sortedData=saveData.sort(function(a,b){
-        return new Date(b.date) - new Date(a.date);
+        return new Date(a.date) - new Date(b.date);
       });
       
       for(var i=0;i<sortedData.length;i++)
       {
         var element=sortedData[i];
         console.log("Element : %j",element);
-        txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
+        var formatDate=new Date(element.date);
+        txtEventList+= element.id+" - "+element.name+" "+formatDate.getFullYear()+"-"+formatDate.getMonth()+1+"-"+formatDate.getDay()+1+" "+element.place+"\n";
       }
       echo.text+=txtEventList;
     }
