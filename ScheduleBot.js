@@ -17,14 +17,6 @@ const client = new line.Client(config);
 // about Express itself: https://expressjs.com/
 const app = express();
 
-let eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
-var saveData = [];
-for(var i=0;i<eventList.length;i++)
-{
-  var element=eventList[i];
-  saveData.push(element);
-};
-
 // var eventModelData=
 // {
 //   id:"",
@@ -54,13 +46,13 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-  // eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
-  console.log("EventList : %j",eventList);
+
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
   var v=false;
   var input=[];
-
+  var saveData = [];
+  saveData=load();
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
@@ -102,20 +94,20 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!all'))
   {
-    if(eventList[0]==undefined){
+    if(saveData.length<=0){
       echo.text="No event planned so far";
       console.log("Empty");
     }
     else
     {
-      console.log("Not Empty : "+eventList.length);
+      console.log("Not Empty : "+saveData.length);
       var txtEventList="";
       echo.text="Event List : "+"\n";
-      for(var i=0;i<eventList.length;i++)
+      for(var i=0;i<saveData.length;i++)
       {
-        var element=eventList[i];
+        var element=saveData[i];
         console.log("Element : %j",element);
-        txtEventList+= element.id+" - "+element.name+" "+element.place +" "+element.date+"\n";
+        txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
       }
       echo.text+=txtEventList;
     }
@@ -141,15 +133,25 @@ function handleEvent(event) {
    saveData=[];
    save(saveData);
   }
+
+  
+
   // use reply API
   return client.replyMessage(event.replyToken, echo);
+}
+function load(){
+  var initArray=[];
+  var obj = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+  for(var i=0;i<obj.length;i++){
+    initArray.push(obj[i]);
+  }
+  return initArray;
 }
 
 function save(data)
 {
   // save data
   var saveFile = JSON.stringify(data);
-  eventList=saveFile;
   fs.writeFile('data.json', saveFile,'utf8', function (err) {
     if (err) throw err;
     console.log('Saved!');
