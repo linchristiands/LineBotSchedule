@@ -103,7 +103,7 @@ function handleEvent(event) {
     var foundData=search(saveData,id);
     var txtEventList="";
     var formatDate=new Date(element.date);
-    txtEventList+= foundData.id+" - "+foundData.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getUTCDay() +" "+foundData.place+"\n";
+    txtEventList+= foundData.id+" - "+foundData.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate() +" "+foundData.place+"\n";
     //TODO ADD GPS LOCATION
     echo.text+=txtEventList;
   }
@@ -127,7 +127,7 @@ function handleEvent(event) {
         var element=sortedData[i];
         console.log("Element : %j",element);
         var formatDate=new Date(element.date);
-        txtEventList+= element.id+" - "+element.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getUTCDay()+" "+element.place+"\n";
+        txtEventList+= element.id+" - "+element.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate()+" "+element.place+"\n";
       }
       echo.text+=txtEventList;
     }
