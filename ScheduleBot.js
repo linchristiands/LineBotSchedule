@@ -4,9 +4,9 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 // const fs = require('fs');
 
-const { DBClient } = require('pg');
+const { Client } = require('pg');
 
-const dbclient = new DBClient({
+const dbclient = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
