@@ -2,7 +2,15 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
-const fs = require('fs');
+// const fs = require('fs');
+
+const { DBClient } = require('pg');
+
+const dbclient = new DBClient({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+
 
 // create LINE SDK config from env variables
 const config = {
@@ -56,7 +64,7 @@ function handleEvent(event) {
   var v=false;
   var input=[];
   var saveData = [];
-  saveData=load();
+  saveData=loadDB();
 
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
@@ -152,20 +160,41 @@ function handleEvent(event) {
   else if(event.message.text.includes('!clearAdmin'))
   {
    // Clear cache data
-   saveData=[];
    save(saveData);
   }
 
   // use reply API
   return client.replyMessage(event.replyToken, echo);
 }
-function load(){
-  var initArray=[];
-  var obj = JSON.parse(fs.readFileSync('data.json', 'utf8'));
-  for(var i=0;i<obj.length;i++){
-    initArray.push(obj[i]);
-  }
-  return initArray;
+// function load(){
+//   var initArray=[];
+//   var obj = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+//   for(var i=0;i<obj.length;i++){
+//     initArray.push(obj[i]);
+//   }
+//   return initArray;
+// }
+
+function loadDB()
+{
+  dbclient.connect();
+  dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
+  });
+  dbclient.end();
+}
+
+function resetDB()
+{
+  dbclient.connect();
+  dbclient.query('DELETE FROM events;', (err, res) => {
+    if (err) throw err;
+    client.end();
+  });
+  dbclient.end();
 }
 
 function search(data,id)
@@ -173,15 +202,15 @@ function search(data,id)
   return data.find(element=> element.id==id);
 }
 
-function save(data)
-{
-  // save data
-  var saveFile = JSON.stringify(data);
-  fs.writeFile('data.json', saveFile,'utf8', function (err) {
-    if (err) throw err;
-    console.log('Saved!');
-  }); 
-}
+// function save(data)
+// {
+//   // save data
+//   var saveFile = JSON.stringify(data);
+//   fs.writeFile('data.json', saveFile,'utf8', function (err) {
+//     if (err) throw err;
+//     console.log('Saved!');
+//   }); 
+// }
 // listen on port
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
