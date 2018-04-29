@@ -68,8 +68,9 @@ function handleEvent(event) {
   var saveData = [];
   
   console.log("loadDB");
-  saveData=loadDB();
-  console.log("savedata:%j",saveData);
+  // saveData=
+  loadDB();
+  // console.log("savedata:%j",saveData);
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
@@ -182,9 +183,9 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  var temp=[];
+  // var temp=[];
   console.log("QUERY DB CLIENT");
-  dbclient.query('select id,name,place from events;', (err, res) => {
+  dbclient.query('select * from events;', (err, res) => {
     if (err) {
       console.log(err);
       throw err;
@@ -198,7 +199,7 @@ function loadDB()
       console.log(JSON.stringify(row));
       temp.push(JSON.stringify(row))
     }
-    return temp;
+    // return temp;
   });
 }
 
