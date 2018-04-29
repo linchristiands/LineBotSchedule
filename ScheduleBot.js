@@ -185,7 +185,12 @@ function loadDB()
     if (err) {
       console.log(err);
       throw err;
-    };
+    }
+    else
+    {
+      console.log("no err");
+      console.log("res:"+res);
+    }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
     }
