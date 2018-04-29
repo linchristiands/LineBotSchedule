@@ -186,6 +186,7 @@ function loadDB()
   // var temp=[];
   console.log("QUERY DB CLIENT");
   dbclient.query('select * from events;', (err, res) => {
+    console.log("res:%j",res);
     if (err) {
       console.log(err);
       throw err;
@@ -193,7 +194,6 @@ function loadDB()
     else
     {
       console.log("no err");
-      console.log("res:"+res);
     }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
