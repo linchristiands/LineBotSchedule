@@ -100,12 +100,13 @@ function handleEvent(event) {
     }
     else
     {
-      console.log("Not Empty");
+      console.log("Not Empty : "+eventList.length);
       var txtEventList="";
       echo.text="Event List : "+"\n";
       for(var i=0;i<eventList.length;i++)
       {
         var element=eventList[i];
+        console.log("Element : %j",element);
         txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
       }
       echo.text+=txtEventList;
