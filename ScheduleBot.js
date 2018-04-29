@@ -102,7 +102,7 @@ function handleEvent(event) {
     var id=input[1];
     var foundData=search(saveData,id);
     var txtEventList="";
-    var formatDate=new Date(element.date);
+    var formatDate=new Date(foundData.date);
     txtEventList+= foundData.id+" - "+foundData.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate() +" "+foundData.place+"\n";
     //TODO ADD GPS LOCATION
     echo.text+=txtEventList;
@@ -135,6 +135,7 @@ function handleEvent(event) {
   else if(event.message.text.includes('!attend'))
   {
     echo.text="Detect user request to attend to event specified";
+    // get userName and add to attendees list
   }
   else if(event.message.text.includes('!commands'))
   {
@@ -146,6 +147,7 @@ function handleEvent(event) {
     echo.text+="!show {eventId} - Show the specified event "+"\n";
     echo.text+="!showattendees {eventId} - Show the specified event "+"\n";
     echo.text+="!attend {eventId} - Add your presence to the specified event"+"\n";
+    echo.text+="!cancel {eventId} - Remove your participation to the specified event"+"\n";
   }
   else if(event.message.text.includes('!clearAdmin'))
   {
