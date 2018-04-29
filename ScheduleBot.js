@@ -6,7 +6,7 @@ const express = require('express');
 
 const { Client } = require('pg');
 
-const dbclient = new Client({
+const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
@@ -19,7 +19,7 @@ const config = {
 };
 
 // create LINE SDK client
-const client = new line.Client(config);
+const lineclient = new line.Client(config);
 
 // create Express app
 // about Express itself: https://expressjs.com/
@@ -59,8 +59,8 @@ function handleEvent(event) {
   {
     groupId=event.source.groupId;
   }
-  dbclient.connect();
-  console.log("dbclient:%j",dbclient);
+  client.connect();
+  console.log("client:"+client);
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
   var v=false;
@@ -169,8 +169,8 @@ function handleEvent(event) {
   }
 
   // use reply API
-  dbclient.end();
-  return client.replyMessage(event.replyToken, echo);
+  client.end();
+  return lineclient.replyMessage(event.replyToken, echo);
 }
 // function load(){
 //   var initArray=[];
@@ -185,7 +185,7 @@ function loadDB()
 {
   // var temp=[];
   console.log("QUERY DB CLIENT");
-  dbclient.query('select id from events;', (err, res) => {
+  client.query('select id from events;', (err, res) => {
     console.log("res:%j",res);
     if (err) {
       console.log(err);
@@ -205,7 +205,7 @@ function loadDB()
 
 function resetDB()
 {
-  dbclient.query('DELETE FROM events;', (err, res) => {
+  client.query('DELETE FROM events;', (err, res) => {
     if (err) throw err;
   });
 }
