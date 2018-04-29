@@ -164,7 +164,7 @@ function handleEvent(event) {
   else if(event.message.text.includes('!clearAdmin'))
   {
    // Clear cache data
-   save(saveData);
+  //  save(saveData);
   }
 
   // use reply API
