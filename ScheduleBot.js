@@ -17,7 +17,14 @@ const client = new line.Client(config);
 // about Express itself: https://expressjs.com/
 const app = express();
 
-let eventList;
+let eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
+var saveData = [];
+for(var i=0;i<eventList.length;i++)
+{
+  var element=eventList[i];
+  saveData.push(element);
+};
+
 // var eventModelData=
 // {
 //   id:"",
@@ -47,13 +54,13 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-  eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
+  // eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
   console.log("EventList : %j",eventList);
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
   var v=false;
   var input=[];
-  var saveData = [];
+
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
@@ -108,7 +115,7 @@ function handleEvent(event) {
       {
         var element=eventList[i];
         console.log("Element : %j",element);
-        txtEventList+= element.id+" - "+element.name+" "+element.date +" "+element.place+"\n";
+        txtEventList+= element.id+" - "+element.name+" "+element.place +" "+element.date+"\n";
       }
       echo.text+=txtEventList;
     }
