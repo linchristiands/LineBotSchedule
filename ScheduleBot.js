@@ -197,7 +197,7 @@ function loadDB()
     }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
-      temp.push(JSON.stringify(row))
+      // temp.push(JSON.stringify(row))
     }
     // return temp;
   });
