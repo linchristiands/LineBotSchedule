@@ -67,8 +67,8 @@ function handleEvent(event) {
   var input=[];
   var saveData = [];
   
-  // console.log("loadDB");
-  loadDB(saveData);
+  console.log("loadDB");
+  saveData=loadDB();
   console.log("savedata:%j",saveData);
   input=event.message.text.split(/[ ]+/);
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
@@ -180,23 +180,25 @@ function handleEvent(event) {
 //   return initArray;
 // }
 
-function loadDB(saveData)
+function loadDB()
 {
-  // console.log("QUERY DB CLIENT");
-  dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
+  var temp=[];
+  console.log("QUERY DB CLIENT");
+  dbclient.query('select id,name,place,date,attendees from events;', (err, res) => {
     if (err) {
-      // console.log(err);
+      console.log(err);
       throw err;
     }
-    // else
-    // {
-    //   console.log("no err");
-    //   console.log("res:"+res);
-    // }
+    else
+    {
+      console.log("no err");
+      console.log("res:"+res);
+    }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
-      saveData.push(row);
+      temp.push(JSON.stringify(row))
     }
+    return temp;
   });
 }
 
