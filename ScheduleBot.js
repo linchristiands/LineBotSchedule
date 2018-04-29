@@ -95,7 +95,7 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!all'))
   {
-    if(eventList.length<=0){
+    if(eventList[0]==undefined){
       echo.text="No event planned so far";
       console.log("Empty");
     }
