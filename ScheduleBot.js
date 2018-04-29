@@ -17,7 +17,7 @@ const client = new line.Client(config);
 // about Express itself: https://expressjs.com/
 const app = express();
 
-let eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
+let eventList;
 // var eventModelData=
 // {
 //   id:"",
@@ -47,7 +47,8 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-
+  eventList=JSON.parse(fs.readFileSync("./data.json","utf8"));
+  console.log("EventList : %j",eventList);
   // create a echoing text message
   const echo = { type: 'text', text: event.message.text };
   var v=false;
