@@ -64,6 +64,7 @@ function handleEvent(event) {
   var v=false;
   var input=[];
   var saveData = [];
+  console.log("loadDB");
   saveData=loadDB();
 
   input=event.message.text.split(/[ ]+/);
@@ -178,8 +179,10 @@ function handleEvent(event) {
 function loadDB()
 {
   dbclient.connect();
+  console.log("query");
   dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
     if (err) throw err;
+    console.log("Row count:"+res.rowCount);
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
     }
