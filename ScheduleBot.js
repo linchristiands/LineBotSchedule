@@ -4,9 +4,9 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 // const fs = require('fs');
 
-const { Client } = require('pg');
+const { Pool } = require('pg');
 
-const dbclient = new Client({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
@@ -178,8 +178,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  console.log("var dburl:"+process.env.DATABASE_URL);
-  dbclient.connect();
+  const dbclient = await pool.connect();
   console.log("query");
   dbclient.query('select id,name,place,date,attendees from events;', (err, res) => {
     if (err) throw err;
@@ -188,15 +187,15 @@ function loadDB()
       console.log(JSON.stringify(row));
     }
   });
-  dbclient.end();
+  dbclient.release();
 }
 
 function resetDB()
 {
-  dbclient.connect();
+  const dbclient = await pool.connect();
   dbclient.query('DELETE FROM events;', (err, res) => {
     if (err) throw err;
-    client.end();
+    dbclient.end();
   });
   dbclient.end();
 }
