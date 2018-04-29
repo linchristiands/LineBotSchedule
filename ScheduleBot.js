@@ -99,11 +99,12 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!show')&&(input.length==2))
   {
-    echo.text="Detect user request to show event specified";
     var id=input[1];
     var foundData=search(saveData,id);
     var txtEventList="";
-    txtEventList+= foundData.id+" - "+foundData.name+" "+foundData.date +" "+foundData.place+"\n";
+    var formatDate=new Date(element.date);
+    txtEventList+= foundData.id+" - "+foundData.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getUTCDay() +" "+foundData.place+"\n";
+    //TODO ADD GPS LOCATION
     echo.text+=txtEventList;
   }
   else if(event.message.text.includes('!all'))
@@ -126,7 +127,7 @@ function handleEvent(event) {
         var element=sortedData[i];
         console.log("Element : %j",element);
         var formatDate=new Date(element.date);
-        txtEventList+= element.id+" - "+element.name+" "+formatDate.getFullYear()+"-"+formatDate.getMonth()+1+"-"+formatDate.getDay()+1+" "+element.place+"\n";
+        txtEventList+= element.id+" - "+element.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getUTCDay()+" "+element.place+"\n";
       }
       echo.text+=txtEventList;
     }
