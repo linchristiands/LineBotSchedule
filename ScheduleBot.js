@@ -181,6 +181,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
+  console.log("QUERY DB CLIENT");
   dbclient.query('SELECT id,name,place,date,attendees FROM events;', (err, res) => {
     if (err) {
       console.log(err);
