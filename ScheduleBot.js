@@ -57,6 +57,7 @@ function handleEvent(event) {
   }
   var groupId;
   var userId;
+  var username;
   userId=event.source.userId;
   if(event.source.type=="group")
   {
@@ -64,9 +65,20 @@ function handleEvent(event) {
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
   console.log("Message from USERID:"+userId);
-  var username=getUserInfos(userId);
-  console.log("Message from username:"+username);
 
+  // getUserInfos()
+  lineclient.getProfile(userid)
+  .then((profile) => {
+    username=profile.displayName;
+    console.log("Message from username:"+username);
+    // console.log(profile.userId);
+    // console.log(profile.pictureUrl);
+    // console.log(profile.statusMessage);
+  })
+  .catch((err) => {
+    // error handling
+  });
+ 
   if(client==undefined)
   {
     client.connect();
@@ -121,7 +133,7 @@ function handleEvent(event) {
     replyLine.text="Detect user request to delete event";
     sendReply=true;
   }
-  else if(event.message.text.includes('!show')&&(input.length==2))
+  else if(event.message.text.includes('!show')&&(input!=undefined)&&(input.length==2))
   {
     var id=input[1];
     var foundData=search(saveData,id);
@@ -160,9 +172,18 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!attend'))
   {
-    replyLine.text="Detect user request to attend to event specified";
+    replyLine.text="Detect user request to attend event specified";
     // get userName and add to attendees list
-
+    var eventId=input[1];
+    addAttendeesEntry(username,eventId);
+    sendReply=true;
+  }
+  else if(event.message.text.includes('!cancel'))
+  {
+    replyLine.text="Detect user request to cancel event specified";
+    // get userName and add to attendees list
+    var eventId=input[1];
+    removeAttendeesEntry(username,eventId);
     sendReply=true;
   }
   else if(event.message.text.includes('!commands'))
@@ -294,21 +315,6 @@ function resetDB()
 function search(data,id)
 {
   return data.find(element=> element.id==id);
-}
-
-function getUserInfos(userid)
-{
-  lineclient.getProfile(userid)
-  .then((profile) => {
-    console.log(profile.displayName);
-    return profile.displayName;
-    // console.log(profile.userId);
-    // console.log(profile.pictureUrl);
-    // console.log(profile.statusMessage);
-  })
-  .catch((err) => {
-    // error handling
-  });
 }
 
 // function save(data)
