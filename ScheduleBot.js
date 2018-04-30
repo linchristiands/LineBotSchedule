@@ -174,7 +174,7 @@ function handleEvent(event) {
       username=profile.displayName;
       addAttendeesEntry(username,eventId);
       replyLine.text="Confirming participation for "+username+" at event "+eventId;
-      sendReply=true;
+      lineclient.replyMessage(event.replyToken, replyLine);
     })
     .catch((err) => {
       // error handling
@@ -188,7 +188,7 @@ function handleEvent(event) {
       username=profile.displayName;
       removeAttendeesEntry(username,eventId);
       replyLine.text="Confirming cancellation for "+username+" at event "+eventId;
-      sendReply=true;
+      lineclient.replyMessage(event.replyToken, replyLine);
     })
     .catch((err) => {
       // error handling
@@ -276,7 +276,7 @@ function addAttendeesEntry(name,eventId){
 }
 
 function removeAttendeesEntry(name){
-  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+';');
+  client.querySync('update events set attendees = array_remove(attendees, \'{'+name+'}\') where id='+eventId+';');
 }
 
 
