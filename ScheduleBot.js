@@ -189,7 +189,7 @@ function handleEvent(event) {
       lineclient.replyMessage(event.replyToken, replyLine);
     })
     .catch((err) => {
-      // error handling
+      console.log(err);
     });
   }
   else if(event.message.text.includes('!commands'))
@@ -275,8 +275,8 @@ function addAttendeesEntry(name,eventId){
 }
 
 function removeAttendeesEntry(name){
-  console.log("removetattendees");
-  client.querySync('update events set attendees = array_remove(attendees, \'{'+name+'}\') where id='+eventId+';');
+  console.log("removeattendees");
+  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+';');
   replyLine.text="Confirming cancellation for "+username+" at event "+eventId;
 }
 
