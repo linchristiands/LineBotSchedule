@@ -85,7 +85,7 @@ function handleEvent(event) {
   var input=[];
   
   console.log("loadDB");
-  await loadDB();
+  loadDB();
   
   input=event.message.text.split(/[ ]+/);
 
