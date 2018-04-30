@@ -90,9 +90,6 @@ function handleEvent(event) {
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
   
-  console.log("loadDB");
-  loadDB();
-  
   input=event.message.text.split(/[ ]+/);
 
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
@@ -139,17 +136,19 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!show')&&(input!=undefined)&&(input.length==2))
   {
+    loadDB();
     var id=input[1];
     var foundData=search(saveData,id);
     var txtEventList="";
     var formatDate=new Date(foundData.date);
     txtEventList+= foundData.id+" - "+foundData.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate() +" "+foundData.place+"\n";
     //TODO ADD GPS LOCATION
-    replyLine.text+=txtEventList;
+    replyLine.text=txtEventList;
     sendReply=true;
   }
   else if(event.message.text.includes('!all'))
   {
+    loadDB();
     if(saveData.length<=0){
       replyLine.text="No event planned so far";
       console.log("Empty");
@@ -228,6 +227,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
+  saveData=[];
   const rows= client.querySync('select * from events;');
   for (let row of rows) {
     console.log(JSON.stringify(row));
