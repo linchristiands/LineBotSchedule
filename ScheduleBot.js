@@ -133,6 +133,8 @@ function handleEvent(event) {
   else if(event.message.text.includes('!del'))
   {
     replyLine.text="Detect user request to delete event";
+    var id=input[1];
+    deleteEntry(id);
     sendReply=true;
   }
   else if(event.message.text.includes('!show')&&(input!=undefined)&&(input.length==2))
