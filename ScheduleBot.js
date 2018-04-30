@@ -55,7 +55,7 @@ app.post('/callback', line.middleware(config), (req, res) => {
       res.status(500).end();
     });
 });
-const replyLine;
+const replyLine = { type: 'text', text: event.message.text };;
 // event handler
 function handleEvent(event) {
   var sendReply=false;
@@ -72,12 +72,10 @@ function handleEvent(event) {
     groupId=event.source.groupId;
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
-
-  replyLine = { type: 'text', text: event.message.text };
   var input=[];
   
   input=event.message.text.split(/[ ]+/);
-
+  replyLine.text="";
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
     var name=input[1];
