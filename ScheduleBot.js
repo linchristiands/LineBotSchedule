@@ -218,9 +218,9 @@ function handleEvent(event) {
 //   return initArray;
 // }
 
-async function loadDB()
+function loadDB()
 {
-  const res=await client.query('select * from events;');
+  const res=client.query('select * from events;');
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
     saveData.push(JSON.stringify(row));
