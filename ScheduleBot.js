@@ -140,10 +140,15 @@ function handleEvent(event) {
     var id=input[1];
     var foundData=search(saveData,id);
     var txtEventList="";
+    if(foundData!=undefined){
     var formatDate=new Date(foundData.date);
     txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate()+"\n";
     //TODO ADD GPS LOCATION
     replyLine.text=txtEventList;
+    }
+    else{
+      replyLine.text="Id not found, try again";
+    }
     sendReply=true;
   }
   else if(event.message.text.includes('!all'))
@@ -192,10 +197,10 @@ function handleEvent(event) {
   else if(event.message.text.includes('!commands'))
   {
     replyLine.text="Commands to use the bot :"+"\n";
-    replyLine.text+="!add {eventName} {place} {date(YY-MM-DD)} - Add event"+"\n";
-    replyLine.text+="!modify {eventId} {eventName} {place} {date(YY-MM-DD)} - Modify event"+"\n";
+    replyLine.text+="!add {eventName} {place} {date(YYYY-MM-DD)} - Add event"+"\n";
+    replyLine.text+="!modify {eventId} {eventName} {place} {date(YYYY-MM-DD)} - Modify event"+"\n";
     replyLine.text+="!del {eventId} - Delete event"+"\n";
-    replyLine.text+="!showall - Show all the events planned"+"\n";
+    replyLine.text+="!all - Show all the events planned"+"\n";
     replyLine.text+="!show {eventId} - Show the specified event "+"\n";
     replyLine.text+="!showattendees {eventId} - Show the specified event "+"\n";
     replyLine.text+="!attend {eventId} - Add your presence to the specified event"+"\n";
