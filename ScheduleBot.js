@@ -11,8 +11,9 @@ const express = require('express');
 // });
 // client.connect();
 
-var client = require('pg-native');
+var Client = require('pg-native');
 console.log(process.env.DATABASE_URL);
+var client = new Client();
 client.connectSync(process.env.DATABASE_URL);
 
 let saveData = [];
