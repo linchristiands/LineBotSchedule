@@ -72,20 +72,6 @@ function handleEvent(event) {
     groupId=event.source.groupId;
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
-  console.log("Message from USERID:"+userId);
-
-  // getUserInfos()
-  lineclient.getProfile(userId)
-  .then((profile) => {
-    username=profile.displayName;
-    console.log("Message from username:"+username);
-    // console.log(profile.userId);
-    // console.log(profile.pictureUrl);
-    // console.log(profile.statusMessage);
-  })
-  .catch((err) => {
-    // error handling
-  });
 
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
@@ -183,7 +169,19 @@ function handleEvent(event) {
     replyLine.text="Detect user request to attend event specified";
     // get userName and add to attendees list
     var eventId=input[1];
-    addAttendeesEntry(username,eventId);
+    // getUserInfos()
+    lineclient.getProfile(userId)
+    .then((profile) => {
+      username=profile.displayName;
+      console.log("Message from username:"+username);
+      addAttendeesEntry(username,eventId);
+      // console.log(profile.userId);
+      // console.log(profile.pictureUrl);
+      // console.log(profile.statusMessage);
+    })
+    .catch((err) => {
+      // error handling
+    });
     sendReply=true;
   }
   else if(event.message.text.includes('!cancel'))
