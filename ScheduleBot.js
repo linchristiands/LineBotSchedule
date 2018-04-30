@@ -220,7 +220,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  const res=await client.querySync('select * from events;');
+  const res=client.querySync('select * from events;');
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
     saveData.push(JSON.stringify(row));
