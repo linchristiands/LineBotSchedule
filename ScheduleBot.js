@@ -128,6 +128,10 @@ function handleEvent(event) {
     if(foundData!=undefined){
     var formatDate=new Date(foundData.date);
     txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate()+"\n";
+    txtEventList+= "Attendees : ";
+    for(var a of foundData.attendees){
+    txtEventList+=a +"\n";
+    }
     //TODO ADD GPS LOCATION
     replyLine.text=txtEventList;
     }
