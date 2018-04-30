@@ -10,6 +10,7 @@ const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
+client.connect();
 
 let saveData = [];
 
@@ -79,10 +80,6 @@ function handleEvent(event) {
   .catch((err) => {
     // error handling
   });
-
-  console.log(client);
-  if(client==undefined)
-    client.connect();
 
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
