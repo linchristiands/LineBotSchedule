@@ -13,8 +13,11 @@ const express = require('express');
 
 var Client = require('pg-native');
 console.log(process.env.DATABASE_URL);
-var client = new Client();
-client.connectSync(process.env.DATABASE_URL);
+var client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+client.connectSync();
 
 let saveData = [];
 
@@ -224,11 +227,12 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  const res= client.querySync('select * from events;');
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-    saveData.push(JSON.stringify(row));
-  }
+  const rows= client.querySync('select * from events;');
+  console.log("rows:%j",rows);
+  // for (let row of res.rows) {
+  //   console.log(JSON.stringify(row));
+  //   saveData.push(JSON.stringify(row));
+  // }
 }
 
 function insertEntry(name,place,date)
