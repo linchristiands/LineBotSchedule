@@ -166,31 +166,35 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!attend'))
   {
-    replyLine.text="Detect user request to attend event specified";
+   
     // get userName and add to attendees list
     var eventId=input[1];
     // getUserInfos()
     lineclient.getProfile(userId)
     .then((profile) => {
       username=profile.displayName;
-      console.log("Message from username:"+username);
       addAttendeesEntry(username,eventId);
-      // console.log(profile.userId);
-      // console.log(profile.pictureUrl);
-      // console.log(profile.statusMessage);
+      replyLine.text="Confirming participation for "+username+" at event "+eventId;
+      sendReply=true;
     })
     .catch((err) => {
       // error handling
     });
-    sendReply=true;
   }
   else if(event.message.text.includes('!cancel'))
   {
-    replyLine.text="Detect user request to cancel event specified";
-    // get userName and add to attendees list
     var eventId=input[1];
-    removeAttendeesEntry(username,eventId);
-    sendReply=true;
+    lineclient.getProfile(userId)
+    .then((profile) => {
+      username=profile.displayName;
+    
+      removeAttendeesEntry(username,eventId);
+      replyLine.text="Confirming cancellation for "+username+" at event "+eventId;
+      sendReply=true;
+    })
+    .catch((err) => {
+      // error handling
+    });
   }
   else if(event.message.text.includes('!commands'))
   {
