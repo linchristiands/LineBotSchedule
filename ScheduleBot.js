@@ -79,14 +79,15 @@ function handleEvent(event) {
   .catch((err) => {
     // error handling
   });
-  
-  client.connect();
+
+  if(client==undefined)
+    client.connect();
 
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
   
   console.log("loadDB");
-  loadDB();
+  loadDB2();
   input=event.message.text.split(/[ ]+/);
 
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
@@ -235,6 +236,15 @@ function loadDB()
       saveData.push(JSON.stringify(row));
     }
   });
+}
+function loadDB2()
+{
+  const res = await client.query('select id from events;');
+  for (let row of res.rows) 
+  {
+    console.log(JSON.stringify(row));
+    saveData.push(JSON.stringify(row));
+  }
 }
 
 function insertEntry(name,place,date)
