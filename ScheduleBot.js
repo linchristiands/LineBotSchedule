@@ -11,6 +11,7 @@ const client = new Client({
   ssl: true,
 });
 
+let saveData = [];
 
 // create LINE SDK config from env variables
 const config = {
@@ -86,11 +87,9 @@ function handleEvent(event) {
   // create a echoing text message
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
-  var saveData = [];
   
   // console.log("loadDB");
-  saveData=loadDB();
-  console.log("savedata:%j",saveData);
+  loadDB();
   input=event.message.text.split(/[ ]+/);
 
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
@@ -224,7 +223,6 @@ function handleEvent(event) {
 
 function loadDB()
 {
-   var temp=[];
   client.query('select id from events;', (err, res) => {
     console.log("res:%j",res);
     if (err) {
@@ -237,11 +235,9 @@ function loadDB()
     }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
-      temp.push(JSON.stringify(row));
+      saveData.push(JSON.stringify(row));
     }
     client.end();
-    console.log("temp:%j",temp);
-    return temp;
   });
 }
 
