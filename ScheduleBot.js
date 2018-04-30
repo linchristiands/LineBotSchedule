@@ -274,7 +274,7 @@ function addAttendeesEntry(name,eventId){
   } 
 }
 
-function removeAttendeesEntry(name){
+function removeAttendeesEntry(name,eventId){
   console.log("removeattendees");
   client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+';');
   replyLine.text="Confirming cancellation for "+username+" at event "+eventId;
