@@ -55,7 +55,7 @@ app.post('/callback', line.middleware(config), (req, res) => {
       res.status(500).end();
     });
 });
-
+const replyLine;
 // event handler
 function handleEvent(event) {
   var sendReply=false;
@@ -73,7 +73,7 @@ function handleEvent(event) {
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
 
-  const replyLine = { type: 'text', text: event.message.text };
+  replyLine = { type: 'text', text: event.message.text };
   var input=[];
   
   input=event.message.text.split(/[ ]+/);
@@ -187,7 +187,6 @@ function handleEvent(event) {
     lineclient.getProfile(userId)
     .then((profile) => {
       username=profile.displayName;
-    
       removeAttendeesEntry(username,eventId);
       replyLine.text="Confirming cancellation for "+username+" at event "+eventId;
       sendReply=true;
@@ -269,10 +268,9 @@ function addAttendeesEntry(name,eventId){
   var i =res[0];
   if(i.attendees.indexOf(name)>-1){
     // in array
-    console.log('in array');
+    replyLine.text="You are already participating in the event "+eventId;
   }
   else{
-    console.log('not in array');
     // not on the in list
     client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\') where id='+eventId+';');
   } 
