@@ -1,5 +1,5 @@
 'use strict';
-
+const https = require('https');
 const line = require('@line/bot-sdk');
 const express = require('express');
 // const fs = require('fs');
@@ -64,16 +64,16 @@ function handleEvent(event) {
   }
   userId=event.source.userId;
   console.log("Message from USERID:"+userId);
-
+  getUserInfos(userId);
   client.connect();
   console.log("client:"+client);
+ 
   // create a echoing text message
   const replyLine = { type: 'text', text: event.message.text };
-  var v=false;
   var input=[];
   var saveData = [];
   
-  console.log("loadDB");
+  // console.log("loadDB");
   saveData=loadDB();
   console.log("savedata:%j",saveData);
   input=event.message.text.split(/[ ]+/);
@@ -183,8 +183,10 @@ function handleEvent(event) {
 
   // use reply API
   //client.end();
-  if(sendReply=true)
-  return lineclient.replyMessage(event.replyToken, replyLine);
+  if(sendReply)
+  {
+    lineclient.replyMessage(event.replyToken, replyLine);
+  }
   return;
 }
 // function load(){
@@ -211,9 +213,10 @@ function loadDB()
     }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
-      temp.push(JSON.stringify(row))
+      temp.push(JSON.stringify(row));
     }
     client.end();
+    console.log("temp:%j",temp);
     return temp;
   });
 }
@@ -288,6 +291,20 @@ function resetDB()
 function search(data,id)
 {
   return data.find(element=> element.id==id);
+}
+
+function getUserInfos(userid)
+{
+  client.getProfile(userid)
+  .then((profile) => {
+    console.log(profile.displayName);
+    console.log(profile.userId);
+    console.log(profile.pictureUrl);
+    console.log(profile.statusMessage);
+  })
+  .catch((err) => {
+    // error handling
+  });
 }
 
 // function save(data)
