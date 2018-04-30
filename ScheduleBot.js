@@ -155,7 +155,6 @@ function handleEvent(event) {
     else
     {
       console.log("Not Empty : "+saveData.length);
-      console.log("saveData : %j",saveData);
       var txtEventList="";
       replyLine.text="Event List : "+"\n";
       var sortedData=saveData.sort(function(a,b){
@@ -231,6 +230,9 @@ function loadDB()
   for (let row of rows) {
     console.log(JSON.stringify(row));
     saveData.push(JSON.stringify(row));
+  }
+  for(var item of saveData){
+    console.log(JSON.stringify(item));
   }
 }
 
