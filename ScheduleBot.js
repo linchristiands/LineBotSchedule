@@ -121,7 +121,12 @@ function handleEvent(event) {
     var txtEventList="";
     if(foundData!=undefined){
     var formatDate=new Date(foundData.date);
-    txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate()+"\n";
+    var month=formatDate.getUTCMonth()+1;
+    var date=formatDate.getDate()+1;
+    if (foundData.gps!="")
+    txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+month+"-"+date+" - GPS location: "+foundData.gps +"\n";
+    else
+    txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+month+"-"+date+"\n";
     txtEventList+= "Attendees : ";
     for(var a of foundData.attendees){
     txtEventList+=a +"\n";
