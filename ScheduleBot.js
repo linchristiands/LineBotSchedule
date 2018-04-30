@@ -55,7 +55,7 @@ app.post('/callback', line.middleware(config), (req, res) => {
       res.status(500).end();
     });
 });
-const replyLine = { type: 'text', text: event.message.text };;
+var replyLine;
 // event handler
 function handleEvent(event) {
   var sendReply=false;
@@ -75,6 +75,7 @@ function handleEvent(event) {
   var input=[];
   
   input=event.message.text.split(/[ ]+/);
+  replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
