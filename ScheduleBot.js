@@ -80,6 +80,7 @@ function handleEvent(event) {
     // error handling
   });
 
+  console.log(client);
   if(client==undefined)
     client.connect();
 
