@@ -64,7 +64,9 @@ function handleEvent(event) {
   }
   userId=event.source.userId;
   console.log("Message from USERID:"+userId);
-  getUserInfos(userId);
+  var username=getUserInfos(userId);
+  console.log("Message from username:"+userId);
+  
   client.connect();
   console.log("client:"+client);
  
@@ -298,9 +300,10 @@ function getUserInfos(userid)
   lineclient.getProfile(userid)
   .then((profile) => {
     console.log(profile.displayName);
-    console.log(profile.userId);
-    console.log(profile.pictureUrl);
-    console.log(profile.statusMessage);
+    return profile.displayName;
+    // console.log(profile.userId);
+    // console.log(profile.pictureUrl);
+    // console.log(profile.statusMessage);
   })
   .catch((err) => {
     // error handling
