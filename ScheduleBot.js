@@ -270,14 +270,13 @@ function addAttendeesEntry(name,eventId){
   else{
     // not on the in list
     client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\') where id='+eventId+';');
-    replyLine.text="Confirming participation for "+username+" at event "+eventId;
+    replyLine.text="Confirming participation for "+name+" at event "+eventId;
   } 
 }
 
 function removeAttendeesEntry(name,eventId){
-  console.log("removeattendees");
   client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+';');
-  replyLine.text="Confirming cancellation for "+username+" at event "+eventId;
+  replyLine.text="Confirming cancellation for "+name+" at event "+eventId;
 }
 
 
