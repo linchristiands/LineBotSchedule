@@ -80,12 +80,11 @@ function handleEvent(event) {
     // error handling
   });
  
-  client.connect();
   // create a echoing text message
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
   
-  // console.log("loadDB");
+  console.log("loadDB");
   loadDB();
   input=event.message.text.split(/[ ]+/);
 
@@ -207,7 +206,6 @@ function handleEvent(event) {
   {
     lineclient.replyMessage(event.replyToken, replyLine);
   }
-  client.end();
   return;
 }
 // function load(){
@@ -221,6 +219,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
+  client.connect();
   client.query('select id from events;', (err, res) => {
     console.log("res:%j",res);
     if (err) {
@@ -235,6 +234,7 @@ function loadDB()
       console.log(JSON.stringify(row));
       saveData.push(JSON.stringify(row));
     }
+    client.end();
   });
 }
 
