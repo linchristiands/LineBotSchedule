@@ -4,13 +4,13 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 // const fs = require('fs');
 
-const { Client } = require('pg');
+const { Client } = require('pg-native');
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
-client.connect();
+client.connectSync();
 
 let saveData = [];
 
@@ -220,7 +220,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  const res=client.query('select * from events;');
+  const res=await client.querySync('select * from events;');
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
     saveData.push(JSON.stringify(row));
@@ -229,26 +229,26 @@ function loadDB()
 
 function insertEntry(name,place,date)
 {
-  client.query('INSERT INTO events (name,place,date,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',array[]::text[]);', (err, res) => {
+  client.querySync('INSERT INTO events (name,place,date,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',array[]::text[]);', (err, res) => {
     if (err) throw err;
   });
 }
 
 function modifyEntry(eventId,name,place,date)
 {
-  client.query('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\'+ where id=+'+eventId+';', (err, res) => {
+  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\'+ where id=+'+eventId+';', (err, res) => {
     if (err) throw err;
   });
 }
 
 function getInfoEntry(eventId){
-  client.query('select * from events where id='+eventId+';', (err, res) => {
+  client.querySync('select * from events where id='+eventId+';', (err, res) => {
     if (err) throw err;
   });
 }
 
 function getAttendeesEntry(eventId){
-  client.query('select attendees from events where id='+eventId+';', (err, res) => {
+  client.querySync('select attendees from events where id='+eventId+';', (err, res) => {
     if (err) throw err;
   });
 }
@@ -267,21 +267,21 @@ function addAttendeesEntry(name,eventId){
 }
 
 function removeAttendeesEntry(name){
-  client.query('update events set attendees = array_remove(attendees, \''+name+'\');', (err, res) => {
+  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\');', (err, res) => {
     if (err) throw err;
   });
 }
 
 
 function deleteEntry(eventId){
-  client.query('delete from events where id='+eventId+";", (err, res) => {
+  client.querySync('delete from events where id='+eventId+";", (err, res) => {
     if (err) throw err;
   });
 }
 
 function resetDB()
 {
-  client.query('DELETE FROM events;', (err, res) => {
+  client.querySync('DELETE FROM events;', (err, res) => {
     if (err) throw err;
   });
 }
