@@ -261,17 +261,20 @@ function getAttendeesEntry(eventId){
 
 function addAttendeesEntry(name,eventId){
   var attendees=getAttendeesEntry(eventId);
+  console.log("attendees :%j",attendees);
   if(attendees.indexOf(name)>-1){
     // in array
+    console.log('in array');
   }
   else{
-    // not already in list
-    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\');');
+    console.log('not in array');
+    // not on the in list
+    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\') where id='+eventId+';');
   } 
 }
 
 function removeAttendeesEntry(name){
-  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\');');
+  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+';');
 }
 
 
