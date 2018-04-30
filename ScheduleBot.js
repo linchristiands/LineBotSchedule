@@ -79,8 +79,9 @@ function handleEvent(event) {
   .catch((err) => {
     // error handling
   });
- 
-  // create a echoing text message
+  
+  client.connect();
+
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
   
@@ -219,7 +220,6 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  client.connect();
   client.query('select id from events;', (err, res) => {
     console.log("res:%j",res);
     if (err) {
@@ -234,7 +234,6 @@ function loadDB()
       console.log(JSON.stringify(row));
       saveData.push(JSON.stringify(row));
     }
-    client.end();
   });
 }
 
@@ -287,7 +286,6 @@ function removeAttendeesEntry(name){
 function deleteEntry(eventId){
   client.query('delete from events where id='+eventId+";", (err, res) => {
     if (err) throw err;
-    client.end();
   });
 }
 
