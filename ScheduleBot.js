@@ -257,7 +257,7 @@ function getInfoEntry(eventId){
 
 function getAttendeesEntry(eventId){
   var row=client.querySync('select attendees from events where id='+eventId+';');
-  return JSON.stringify(row.attendees);
+  return JSON.stringify(row);
 }
 
 function addAttendeesEntry(name,eventId){
