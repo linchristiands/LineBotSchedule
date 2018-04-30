@@ -4,13 +4,16 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 // const fs = require('fs');
 
-const { Client } = require('pg-native');
+// const { Client } = require('pg');
+// const client = new Client({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: true,
+// });
+// client.connect();
 
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true,
-});
-client.connect();
+var client = require('pg-native');
+console.log(process.env.DATABASE_URL);
+client.connectSync();
 
 let saveData = [];
 
