@@ -80,15 +80,12 @@ function handleEvent(event) {
     // error handling
   });
  
-  if(client==undefined)
-  {
-    client.connect();
-  }
+  client.connect();
   // create a echoing text message
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
   
-  console.log("loadDB");
+  // console.log("loadDB");
   loadDB();
   input=event.message.text.split(/[ ]+/);
 
@@ -210,6 +207,7 @@ function handleEvent(event) {
   {
     lineclient.replyMessage(event.replyToken, replyLine);
   }
+  client.end();
   return;
 }
 // function load(){
@@ -223,7 +221,6 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  client.connect();
   client.query('select id from events;', (err, res) => {
     console.log("res:%j",res);
     if (err) {
@@ -238,41 +235,32 @@ function loadDB()
       console.log(JSON.stringify(row));
       saveData.push(JSON.stringify(row));
     }
-    client.end();
   });
 }
 
 function insertEntry(name,place,date)
 {
-  client.connect();
   client.query('INSERT INTO events (name,place,date,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',array[]::text[]);', (err, res) => {
     if (err) throw err;
-    client.end();
   });
 }
 
 function modifyEntry(eventId,name,place,date)
 {
-  client.connect();
   client.query('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\'+ where id=+'+eventId+';', (err, res) => {
     if (err) throw err;
-    client.end();
   });
 }
 
 function getInfoEntry(eventId){
-  client.connect();
   client.query('select * from events where id='+eventId+';', (err, res) => {
     if (err) throw err;
-    client.end();
   });
 }
 
 function getAttendeesEntry(eventId){
-  client.connect();
   client.query('select attendees from events where id='+eventId+';', (err, res) => {
     if (err) throw err;
-    client.end();
   });
 }
 
@@ -283,25 +271,20 @@ function addAttendeesEntry(name,eventId){
   }
   else{
     // not already in list
-    client.connect();
     client.query('update events set attendees = array_cat(attendees,\'{'+name+'}\');', (err, res) => {
       if (err) throw err;
-      client.end();
     });
   } 
 }
 
 function removeAttendeesEntry(name){
-  client.connect();
   client.query('update events set attendees = array_remove(attendees, \''+name+'\');', (err, res) => {
     if (err) throw err;
-    client.end();
   });
 }
 
 
 function deleteEntry(eventId){
-  client.connect();
   client.query('delete from events where id='+eventId+";", (err, res) => {
     if (err) throw err;
     client.end();
@@ -310,10 +293,8 @@ function deleteEntry(eventId){
 
 function resetDB()
 {
-  client.connect();
   client.query('DELETE FROM events;', (err, res) => {
     if (err) throw err;
-    client.end();
   });
 }
 
