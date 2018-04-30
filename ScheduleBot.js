@@ -66,10 +66,11 @@ function handleEvent(event) {
   console.log("Message from USERID:"+userId);
   var username=getUserInfos(userId);
   console.log("Message from username:"+userId);
-  
-  client.connect();
-  console.log("client:"+client);
- 
+
+  if(client==undefined)
+  {
+    client.connect();
+  }
   // create a echoing text message
   const replyLine = { type: 'text', text: event.message.text };
   var input=[];
