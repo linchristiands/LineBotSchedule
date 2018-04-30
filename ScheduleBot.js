@@ -67,7 +67,7 @@ function handleEvent(event) {
   console.log("Message from USERID:"+userId);
 
   // getUserInfos()
-  lineclient.getProfile(userid)
+  lineclient.getProfile(userId)
   .then((profile) => {
     username=profile.displayName;
     console.log("Message from username:"+username);
