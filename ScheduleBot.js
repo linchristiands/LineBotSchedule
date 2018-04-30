@@ -13,7 +13,7 @@ const express = require('express');
 
 var client = require('pg-native');
 console.log(process.env.DATABASE_URL);
-client.connectSync();
+client.connectSync(process.env.DATABASE_URL);
 
 let saveData = [];
 
