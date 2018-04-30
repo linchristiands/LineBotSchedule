@@ -87,7 +87,8 @@ function handleEvent(event) {
   var input=[];
   
   console.log("loadDB");
-  loadDB2();
+  loadDB();
+  
   input=event.message.text.split(/[ ]+/);
 
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
@@ -221,7 +222,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  client.query('select id from events;', (err, res) => {
+  client.query('select * from events;', (err, res) => {
     console.log("res:%j",res);
     if (err) {
       console.log(err);
@@ -236,15 +237,6 @@ function loadDB()
       saveData.push(JSON.stringify(row));
     }
   });
-}
-async function loadDB2()
-{
-  const res = await client.query('select id from events;');
-  for (let row of res.rows) 
-  {
-    console.log(JSON.stringify(row));
-    saveData.push(JSON.stringify(row));
-  }
 }
 
 function insertEntry(name,place,date)
