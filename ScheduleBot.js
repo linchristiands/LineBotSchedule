@@ -155,6 +155,7 @@ function handleEvent(event) {
     else
     {
       console.log("Not Empty : "+saveData.length);
+      console.log("saveData : %j",saveData);
       var txtEventList="";
       replyLine.text="Event List : "+"\n";
       var sortedData=saveData.sort(function(a,b){
