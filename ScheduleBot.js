@@ -85,7 +85,7 @@ function handleEvent(event) {
   var input=[];
   
   console.log("loadDB");
-  loadDB();
+  await loadDB();
   
   input=event.message.text.split(/[ ]+/);
 
@@ -218,23 +218,13 @@ function handleEvent(event) {
 //   return initArray;
 // }
 
-function loadDB()
+async function loadDB()
 {
-  client.query('select * from events;', (err, res) => {
-    console.log("res:%j",res);
-    if (err) {
-      console.log(err);
-      throw err;
-    }
-    else
-    {
-      console.log("no err");
-    }
-    for (let row of res.rows) {
-      console.log(JSON.stringify(row));
-      saveData.push(JSON.stringify(row));
-    }
-  });
+  const res=await client.query('select * from events;');
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+    saveData.push(JSON.stringify(row));
+  }
 }
 
 function insertEntry(name,place,date)
