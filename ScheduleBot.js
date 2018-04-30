@@ -237,7 +237,7 @@ function loadDB()
     }
   });
 }
-function loadDB2()
+async function loadDB2()
 {
   const res = await client.query('select id from events;');
   for (let row of res.rows) 
