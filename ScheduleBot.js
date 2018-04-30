@@ -245,28 +245,20 @@ function loadDB()
 
 function insertEntry(name,place,date)
 {
-  client.querySync('INSERT INTO events (name,place,date,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',array[]::text[]);', (err, res) => {
-    if (err) throw err;
-  });
+  client.querySync('INSERT INTO events (name,place,date,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',array[]::text[]);');
 }
 
 function modifyEntry(eventId,name,place,date)
 {
-  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\'+ where id=+'+eventId+';', (err, res) => {
-    if (err) throw err;
-  });
+  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\'+ where id=+'+eventId+';');
 }
 
 function getInfoEntry(eventId){
-  client.querySync('select * from events where id='+eventId+';', (err, res) => {
-    if (err) throw err;
-  });
+  return client.querySync('select * from events where id='+eventId+';');
 }
 
 function getAttendeesEntry(eventId){
-  client.querySync('select attendees from events where id='+eventId+';', (err, res) => {
-    if (err) throw err;
-  });
+  return client.querySync('select attendees from events where id='+eventId+';');
 }
 
 function addAttendeesEntry(name,eventId){
@@ -276,30 +268,22 @@ function addAttendeesEntry(name,eventId){
   }
   else{
     // not already in list
-    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\');', (err, res) => {
-      if (err) throw err;
-    });
+    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\');');
   } 
 }
 
 function removeAttendeesEntry(name){
-  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\');', (err, res) => {
-    if (err) throw err;
-  });
+  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\');');
 }
 
 
 function deleteEntry(eventId){
-  client.querySync('delete from events where id='+eventId+";", (err, res) => {
-    if (err) throw err;
-  });
+  client.querySync('delete from events where id='+eventId+";");
 }
 
 function resetDB()
 {
-  client.querySync('DELETE FROM events;', (err, res) => {
-    if (err) throw err;
-  });
+  client.querySync('DELETE FROM events;');
 }
 
 function search(data,id)
