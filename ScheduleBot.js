@@ -257,12 +257,12 @@ function getInfoEntry(eventId){
 
 function getAttendeesEntry(eventId){
   var row=client.querySync('select attendees from events where id='+eventId+';');
-  return JSON.stringify(row);
+  return row;
 }
 
 function addAttendeesEntry(name,eventId){
   var attendees=getAttendeesEntry(eventId);
-  console.log("attendees :%j",attendees);
+  console.log(attendees);
   if(attendees.indexOf(name)>-1){
     // in array
     console.log('in array');
