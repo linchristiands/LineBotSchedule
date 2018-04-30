@@ -10,7 +10,7 @@ const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
-client.connectSync();
+client.connect();
 
 let saveData = [];
 
@@ -220,7 +220,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  const res=client.querySync('select * from events;');
+  const res= client.querySync('select * from events;');
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
     saveData.push(JSON.stringify(row));
@@ -260,7 +260,7 @@ function addAttendeesEntry(name,eventId){
   }
   else{
     // not already in list
-    client.query('update events set attendees = array_cat(attendees,\'{'+name+'}\');', (err, res) => {
+    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\');', (err, res) => {
       if (err) throw err;
     });
   } 
