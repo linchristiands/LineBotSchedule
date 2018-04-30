@@ -77,7 +77,7 @@ function handleEvent(event) {
   input=event.message.text.split(/[ ]+/);
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
-  if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
+  if(event.message.text.includes('!add')&&(input.length>3)) // if add and params are well defined add to array
   {
     var name=input[1];
     var place=input[2];
@@ -139,6 +139,7 @@ function handleEvent(event) {
     loadDB();
     if(saveData.length<=0){
       replyLine.text="No event planned so far";
+      sendReply=true;
       console.log("Empty");
     }
     else
@@ -193,7 +194,7 @@ function handleEvent(event) {
   else if(event.message.text.includes('!commands'))
   {
     replyLine.text="Commands to use the bot :"+"\n";
-    replyLine.text+="!add {eventName} {place} {date(YYYY-MM-DD)} - Add event"+"\n";
+    replyLine.text+="!add {eventName} {place} {date(YYYY-MM-DD)} {gps location (optional)} - Add event"+"\n";
     replyLine.text+="!modify {eventId} {eventName} {place} {date(YYYY-MM-DD)} - Modify event"+"\n";
     replyLine.text+="!del {eventId} - Delete event"+"\n";
     replyLine.text+="!all - Show all the events planned"+"\n";
