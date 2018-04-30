@@ -229,7 +229,7 @@ function loadDB()
   const rows= client.querySync('select * from events;');
   for (let row of rows) {
     console.log(JSON.stringify(row));
-    saveData.push(JSON.stringify(row));
+    saveData.push(row);
   }
   for(var item of saveData){
     console.log(JSON.stringify(item));
