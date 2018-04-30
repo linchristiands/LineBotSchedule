@@ -14,10 +14,9 @@ const express = require('express');
 var Client = require('pg-native');
 console.log(process.env.DATABASE_URL);
 var client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true,
+  ssl: true
 });
-client.connectSync();
+client.connectSync(process.env.DATABASE_URL);
 
 let saveData = [];
 
