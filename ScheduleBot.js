@@ -227,11 +227,10 @@ function handleEvent(event) {
 function loadDB()
 {
   const rows= client.querySync('select * from events;');
-  console.log("rows:%j",rows);
-  // for (let row of res.rows) {
-  //   console.log(JSON.stringify(row));
-  //   saveData.push(JSON.stringify(row));
-  // }
+  for (let row of rows) {
+    console.log(JSON.stringify(row));
+    saveData.push(JSON.stringify(row));
+  }
 }
 
 function insertEntry(name,place,date)
