@@ -57,15 +57,15 @@ function handleEvent(event) {
   }
   var groupId;
   var userId;
+  userId=event.source.userId;
   if(event.source.type=="group")
   {
     groupId=event.source.groupId;
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
-  userId=event.source.userId;
   console.log("Message from USERID:"+userId);
   var username=getUserInfos(userId);
-  console.log("Message from username:"+userId);
+  console.log("Message from username:"+username);
 
   if(client==undefined)
   {
