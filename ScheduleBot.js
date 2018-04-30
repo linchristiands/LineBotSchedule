@@ -82,7 +82,7 @@ function handleEvent(event) {
     var name=input[1];
     var place=input[2];
     var date=input[3];
-    var GPS=input[4];
+    var gps=input[4];
     var d=date.split("-");
     var formattedDate = new Date(d[0],d[1],d[2]);
     if(gps==undefined)
