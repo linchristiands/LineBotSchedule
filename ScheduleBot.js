@@ -50,28 +50,34 @@ app.post('/callback', line.middleware(config), (req, res) => {
 
 // event handler
 function handleEvent(event) {
+  var sendReply=false;
   if (event.type !== 'message' || event.message.type !== 'text') {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
   var groupId;
+  var userId;
   if(event.source.type=="group")
   {
     groupId=event.source.groupId;
+    console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
+  userId=event.source.userId;
+  console.log("Message from USERID:"+userId);
+
   client.connect();
   console.log("client:"+client);
   // create a echoing text message
-  const echo = { type: 'text', text: event.message.text };
+  const replyLine = { type: 'text', text: event.message.text };
   var v=false;
   var input=[];
   var saveData = [];
   
   console.log("loadDB");
-  // saveData=
-  loadDB();
-  // console.log("savedata:%j",saveData);
+  saveData=loadDB();
+  console.log("savedata:%j",saveData);
   input=event.message.text.split(/[ ]+/);
+
   if(event.message.text.includes('!add')&&(input.length==4)) // if add and params are well defined add to array
   {
     var name=input[1];
@@ -89,11 +95,12 @@ function handleEvent(event) {
     saveData.push(LineEvent);
     console.log("SaveData:"+(JSON.stringify(saveData, false, null)));
     save(saveData);
-    echo.text="Event added";
+    replyLine.text="Event added";
+    sendReply=true;
   }
   else if(event.message.text.includes('!modify'))
   {
-    echo.text="Detect user request to modify event specified";
+    replyLine.text="Detect user request to modify event specified";
     // var idToModify=input[1];
     // var name=input[2];
     // var place=input[3];
@@ -104,10 +111,12 @@ function handleEvent(event) {
     //   date:date,
     //   attendees:[],
     // };
+    sendReply=true;
   }
   else if(event.message.text.includes('!del'))
   {
-    echo.text="Detect user request to delete event";
+    replyLine.text="Detect user request to delete event";
+    sendReply=true;
   }
   else if(event.message.text.includes('!show')&&(input.length==2))
   {
@@ -117,19 +126,20 @@ function handleEvent(event) {
     var formatDate=new Date(foundData.date);
     txtEventList+= foundData.id+" - "+foundData.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate() +" "+foundData.place+"\n";
     //TODO ADD GPS LOCATION
-    echo.text+=txtEventList;
+    replyLine.text+=txtEventList;
+    sendReply=true;
   }
   else if(event.message.text.includes('!all'))
   {
     if(saveData.length<=0){
-      echo.text="No event planned so far";
+      replyLine.text="No event planned so far";
       console.log("Empty");
     }
     else
     {
       console.log("Not Empty : "+saveData.length);
       var txtEventList="";
-      echo.text="Event List : "+"\n";
+      replyLine.text="Event List : "+"\n";
       var sortedData=saveData.sort(function(a,b){
         return new Date(a.date) - new Date(b.date);
       });
@@ -141,25 +151,29 @@ function handleEvent(event) {
         var formatDate=new Date(element.date);
         txtEventList+= element.id+" - "+element.name+" "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate()+" "+element.place+"\n";
       }
-      echo.text+=txtEventList;
+      replyLine.text+=txtEventList;
+      sendReply=true;
     }
   }
   else if(event.message.text.includes('!attend'))
   {
-    echo.text="Detect user request to attend to event specified";
+    replyLine.text="Detect user request to attend to event specified";
     // get userName and add to attendees list
+
+    sendReply=true;
   }
   else if(event.message.text.includes('!commands'))
   {
-    echo.text="Commands to use the bot :"+"\n";
-    echo.text+="!add {eventName} {place} {date(YY-MM-DD)} - Add event"+"\n";
-    echo.text+="!modify {eventId} {eventName} {place} {date(YY-MM-DD)} - Modify event"+"\n";
-    echo.text+="!del {eventId} - Delete event"+"\n";
-    echo.text+="!showall - Show all the events planned"+"\n";
-    echo.text+="!show {eventId} - Show the specified event "+"\n";
-    echo.text+="!showattendees {eventId} - Show the specified event "+"\n";
-    echo.text+="!attend {eventId} - Add your presence to the specified event"+"\n";
-    echo.text+="!cancel {eventId} - Remove your participation to the specified event"+"\n";
+    replyLine.text="Commands to use the bot :"+"\n";
+    replyLine.text+="!add {eventName} {place} {date(YY-MM-DD)} - Add event"+"\n";
+    replyLine.text+="!modify {eventId} {eventName} {place} {date(YY-MM-DD)} - Modify event"+"\n";
+    replyLine.text+="!del {eventId} - Delete event"+"\n";
+    replyLine.text+="!showall - Show all the events planned"+"\n";
+    replyLine.text+="!show {eventId} - Show the specified event "+"\n";
+    replyLine.text+="!showattendees {eventId} - Show the specified event "+"\n";
+    replyLine.text+="!attend {eventId} - Add your presence to the specified event"+"\n";
+    replyLine.text+="!cancel {eventId} - Remove your participation to the specified event"+"\n";
+    sendReply=true;
   }
   else if(event.message.text.includes('!clearAdmin'))
   {
@@ -169,7 +183,9 @@ function handleEvent(event) {
 
   // use reply API
   //client.end();
-  return lineclient.replyMessage(event.replyToken, echo);
+  if(sendReply=true)
+  return lineclient.replyMessage(event.replyToken, replyLine);
+  return;
 }
 // function load(){
 //   var initArray=[];
@@ -182,8 +198,7 @@ function handleEvent(event) {
 
 function loadDB()
 {
-  // var temp=[];
-  console.log("QUERY DB CLIENT");
+   var temp=[];
   client.query('select id from events;', (err, res) => {
     console.log("res:%j",res);
     if (err) {
@@ -196,9 +211,69 @@ function loadDB()
     }
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
-      // temp.push(JSON.stringify(row))
+      temp.push(JSON.stringify(row))
     }
-    // return temp;
+    client.end();
+    return temp;
+  });
+}
+
+function insertEntry(name,place,date)
+{
+  client.query('INSERT INTO events (name,place,date,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',array[]::text[]);', (err, res) => {
+    if (err) throw err;
+    client.end();
+  });
+}
+
+function modifyEntry(eventId,name,place,date)
+{
+  client.query('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\'+ where id=+'+eventId+';', (err, res) => {
+    if (err) throw err;
+    client.end();
+  });
+}
+
+function getInfoEntry(eventId){
+  client.query('select * from events where id='+eventId+';', (err, res) => {
+    if (err) throw err;
+    client.end();
+  });
+}
+
+function getAttendeesEntry(eventId){
+  client.query('select attendees from events where id='+eventId+';', (err, res) => {
+    if (err) throw err;
+    client.end();
+  });
+}
+
+function addAttendeesEntry(name,eventId){
+  var attendees=getAttendeesEntry(eventId);
+  if(attendees.indexOf(name)>-1){
+    // in array
+  }
+  else{
+    // not already in list
+    client.query('update events set attendees = array_cat(attendees,\'{'+name+'}\');', (err, res) => {
+      if (err) throw err;
+      client.end();
+    });
+  } 
+}
+
+function removeAttendeesEntry(name){
+  client.query('update events set attendees = array_remove(attendees, \''+name+'\');', (err, res) => {
+    if (err) throw err;
+    client.end();
+  });
+}
+
+
+function deleteEntry(eventId){
+  client.query('delete from events where id='+eventId+";", (err, res) => {
+    if (err) throw err;
+    client.end();
   });
 }
 
@@ -206,6 +281,7 @@ function resetDB()
 {
   client.query('DELETE FROM events;', (err, res) => {
     if (err) throw err;
+    client.end();
   });
 }
 
