@@ -295,7 +295,7 @@ function search(data,id)
 
 function getUserInfos(userid)
 {
-  client.getProfile(userid)
+  lineclient.getProfile(userid)
   .then((profile) => {
     console.log(profile.displayName);
     console.log(profile.userId);
