@@ -168,7 +168,7 @@ function handleEvent(event) {
         var element=sortedData[i];
         console.log("Element : %j",element);
         var formatDate=new Date(element.date);
-        txtEventList+= element.id+" - "+element.name+" "+element.place+" - "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate()+"\n";
+        txtEventList+= element.id+" - "+element.name+" - "+element.place+" - "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate()+"\n";
       }
       replyLine.text+=txtEventList;
       sendReply=true;
