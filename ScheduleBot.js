@@ -262,7 +262,10 @@ function getAttendeesEntry(eventId){
 
 function addAttendeesEntry(name,eventId){
   var attendees=getAttendeesEntry(eventId);
-  console.log(attendees);
+  for(var i of attendees){
+    console.log(i);
+  }
+  // console.log(attendees);
   if(attendees.indexOf(name)>-1){
     // in array
     console.log('in array');
