@@ -82,18 +82,12 @@ function handleEvent(event) {
     var name=input[1];
     var place=input[2];
     var date=input[3];
+    var GPS=input[4];
     var d=date.split("-");
     var formattedDate = new Date(d[0],d[1],d[2]);
-    var LineEvent={
-      id:saveData.length+1,
-      name:name,
-      place:place,
-      date:formattedDate,
-      attendees:[],
-    };
-    saveData.push(LineEvent);
-    console.log("SaveData:"+(JSON.stringify(saveData, false, null)));
-    save(saveData);
+    if(gps==undefined)
+      gps="";
+    insertEntry(name,place,date,gps);
     replyLine.text="Event added";
     sendReply=true;
   }
@@ -114,9 +108,9 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!del'))
   {
-    replyLine.text="Detect user request to delete event";
     var id=input[1];
     deleteEntry(id);
+    replyLine.text="Event "+id +" has been deleted";
     sendReply=true;
   }
   else if(event.message.text.includes('!show')&&(input!=undefined)&&(input.length==2))
@@ -245,9 +239,9 @@ function loadDB()
   }
 }
 
-function insertEntry(name,place,date)
+function insertEntry(name,place,date,gps)
 {
-  client.querySync('INSERT INTO events (name,place,date,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',array[]::text[]);');
+  client.querySync('INSERT INTO events (name,place,date,gps,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[]);');
 }
 
 function modifyEntry(eventId,name,place,date)
