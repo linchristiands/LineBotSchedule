@@ -122,16 +122,19 @@ function handleEvent(event) {
     if(foundData!=undefined){
     var formatDate=new Date(foundData.date);
     var month=formatDate.getUTCMonth()+1;
-    var date=formatDate.getDate()+1;
+    var date=formatDate.getDate();
     if (foundData.gps!="")
-    txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+month+"-"+date+" - GPS location: "+foundData.gps +"\n";
+      txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+month+"-"+date+" - GPS location: "+foundData.gps +"\n";
     else
-    txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+month+"-"+date+"\n";
-    txtEventList+= "Attendees : ";
-    for(var a of foundData.attendees){
-    txtEventList+=a +"\n";
+      txtEventList+= foundData.id+" - "+foundData.name+" - "+foundData.place+" - "+formatDate.getFullYear()+"-"+month+"-"+date+"\n";
+      
+    if (foundData.attendees.length!=0)
+    {
+      txtEventList+= "Attendees : ";
+      for(var a of foundData.attendees){
+      txtEventList+=a +"\n";
+      }
     }
-    //TODO ADD GPS LOCATION
     replyLine.text=txtEventList;
     }
     else{
@@ -161,7 +164,10 @@ function handleEvent(event) {
         var element=sortedData[i];
         console.log("Element : %j",element);
         var formatDate=new Date(element.date);
-        txtEventList+= element.id+" - "+element.name+" - "+element.place+" - "+formatDate.getFullYear()+"-"+formatDate.getUTCMonth()+"-"+formatDate.getDate()+"\n";
+        var month=formatDate.getUTCMonth()+1;
+        var date=formatDate.getDate();
+        // txtEventList+= element.id+" - "+element.name+" - "+element.place+" - "+formatDate.getFullYear()+"-"+month+"-"+formatDate.getDate()+"\n";
+        txtEventList+= element.id+" - "+element.name+" - "+formatDate.getFullYear()+"-"+month+"-"+formatDate.getDate()+"\n";
       }
       replyLine.text+=txtEventList;
       sendReply=true;
