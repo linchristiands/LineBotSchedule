@@ -113,7 +113,7 @@ function handleEvent(event) {
     replyLine.text="Event "+id +" has been deleted";
     sendReply=true;
   }
-  else if(event.message.text.includes('!show')&&(input!=undefined)&&(input.length==2))
+  else if(event.message.text.includes('!show')&&(input!=undefined))
   {
     loadDB();
     var id=input[2];
@@ -137,7 +137,8 @@ function handleEvent(event) {
     }
     replyLine.text=txtEventList;
     }
-    else{
+    else
+    {
       replyLine.text="Id not found, try again";
     }
     sendReply=true;
