@@ -79,10 +79,10 @@ function handleEvent(event) {
   replyLine.text="";
   if(event.message.text.includes('!add')&&(input.length>3)) // if add and params are well defined add to array
   {
-    var name=input[1];
-    var place=input[2];
-    var date=input[3];
-    var gps=input[4];
+    var name=input[2];
+    var place=input[3];
+    var date=input[4];
+    var gps=input[5];
     var d=date.split("-");
     var formattedDate = new Date(d[0],d[1],d[2]);
     if(gps==undefined)
@@ -108,10 +108,7 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!del'))
   {
-    var id=input[1];
-    console.log("input 2:"+input[2]);
-    console.log("input 1:"+id);
-    console.log("input 0"+input[0]);
+    var id=input[2];
     deleteEntry(id);
     replyLine.text="Event "+id +" has been deleted";
     sendReply=true;
@@ -119,7 +116,7 @@ function handleEvent(event) {
   else if(event.message.text.includes('!show')&&(input!=undefined)&&(input.length==2))
   {
     loadDB();
-    var id=input[1];
+    var id=input[2];
     var foundData=search(saveData,id);
     var txtEventList="";
     if(foundData!=undefined){
@@ -180,7 +177,7 @@ function handleEvent(event) {
   {
    
     // get userName and add to attendees list
-    var eventId=input[1];
+    var eventId=input[2];
     // getUserInfos()
     lineclient.getProfile(userId)
     .then((profile) => {
@@ -194,7 +191,7 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!cancel'))
   {
-    var eventId=input[1];
+    var eventId=input[2];
     lineclient.getProfile(userId)
     .then((profile) => {
       username=profile.displayName;
