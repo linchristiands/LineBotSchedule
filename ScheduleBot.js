@@ -109,6 +109,7 @@ function handleEvent(event) {
   else if(event.message.text.includes('!del'))
   {
     var id=input[1];
+    console.log("input 2:"+input[2]);
     console.log("input 1:"+id);
     console.log("input 0"+input[0]);
     deleteEntry(id);
