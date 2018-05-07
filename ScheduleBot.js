@@ -194,6 +194,13 @@ function handleEvent(event) {
     var eventId=input[1];
     console.log("attend event");
     console.log("input id:"+eventId);
+    lineclient.getGroupMemberIds(groupId,userId)
+    .then((res) => {
+      console.log("groupmemberids:"+res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
     // getUserInfos()
     lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
       username=profile.displayName;
