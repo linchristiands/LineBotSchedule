@@ -74,8 +74,8 @@ function handleEvent(event) {
   }
   var input=[];
   
-  input=event.message.text.replace(","," ").split(/[ ]+/);
-  console.log("UserMsg:"+input);
+  input=event.message.text.split(/[ ]+/);
+  console.log("UserMsg:"+event.message.text);
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
   if(event.message.text.includes('!add')&&(input.length>3)) // if add and params are well defined add to array
