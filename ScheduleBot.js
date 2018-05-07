@@ -116,20 +116,20 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!del'))
   {
-    var id=input[1];
+    var eventId=input[1];
     console.log("Delete event");
-    console.log("input id:"+id);
-    deleteEntry(id);
-    replyLine.text="Event "+id +" has been deleted";
+    console.log("input id:"+eventId);
+    deleteEntry(eventId);
+    replyLine.text="Event "+eventId +" has been deleted";
     sendReply=true;
   }
   else if(event.message.text.includes('!show')&&(input!=undefined))
   {
     loadDB();
-    var id=input[1];
+    var eventId=input[1];
     console.log("show event");
-    console.log("input id:"+id);
-    var foundData=search(saveData,id);
+    console.log("input id:"+eventId);
+    var foundData=search(saveData,eventId);
     var txtEventList="";
     if(foundData!=undefined){
     var formatDate=new Date(foundData.date);
@@ -193,7 +193,7 @@ function handleEvent(event) {
     // get userName and add to attendees list
     var eventId=input[1];
     console.log("attend event");
-    console.log("input id:"+id);
+    console.log("input id:"+eventId);
     // getUserInfos()
     lineclient.getProfile(userId)
     .then((profile) => {
@@ -209,7 +209,7 @@ function handleEvent(event) {
   {
     var eventId=input[1];
     console.log("cancel event");
-    console.log("input id:"+id);
+    console.log("input id:"+eventIdid);
     lineclient.getProfile(userId)
     .then((profile) => {
       username=profile.displayName;
