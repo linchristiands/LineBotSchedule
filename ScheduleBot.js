@@ -74,7 +74,7 @@ function handleEvent(event) {
   }
   var input=[];
   
-  input=event.message.text.split(/[ ]+/);
+  input=event.message.text.trim().split(/[ ]+/);
   console.log("UserMsg:"+event.message.text);
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
