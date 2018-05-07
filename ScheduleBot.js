@@ -195,8 +195,7 @@ function handleEvent(event) {
     console.log("attend event");
     console.log("input id:"+eventId);
     // getUserInfos()
-    lineclient.getProfile(userId)
-    .then((profile) => {
+    lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
       username=profile.displayName;
       console.log("Attend for username:"+username);
       addAttendeesEntry(username,eventId);
@@ -212,7 +211,7 @@ function handleEvent(event) {
     var eventId=input[1];
     console.log("cancel event");
     console.log("input id:"+eventIdid);
-    lineclient.getProfile(userId)
+    lineclient.getGroupMemberProfile(groupId,userId)
     .then((profile) => {
       username=profile.displayName;
       removeAttendeesEntry(username,eventId);
