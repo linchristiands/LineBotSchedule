@@ -198,11 +198,13 @@ function handleEvent(event) {
     lineclient.getProfile(userId)
     .then((profile) => {
       username=profile.displayName;
+      console.log("Attend for username:"+username);
       addAttendeesEntry(username,eventId);
       lineclient.replyMessage(event.replyToken, replyLine);
     })
     .catch((err) => {
-      // error handling
+      console.log("error trying to add attendees for eventID:"+eventId);
+      console.log("error:"+err);
     });
   }
   else if(event.message.text.includes('!cancel'))
