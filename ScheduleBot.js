@@ -144,7 +144,10 @@ function handleEvent(event) {
     {
       txtEventList+= "Attendees : ";
       for(var a of foundData.attendees){
-      txtEventList+=a +"\n";
+      txtEventList+=a;
+      
+      if(foundData.attendees[foundData.attendees.length-1]!=a)
+        txtEventList+=" - ";
       }
     }
     replyLine.text=txtEventList;
@@ -228,7 +231,7 @@ function handleEvent(event) {
     replyLine.text+="!del {eventId} - Delete event"+"\n";
     replyLine.text+="!all - Show all the events planned"+"\n";
     replyLine.text+="!show {eventId} - Show the specified event "+"\n";
-    replyLine.text+="!showattendees {eventId} - Show the specified event "+"\n";
+    // replyLine.text+="!showattendees {eventId} - Show the specified event "+"\n";
     replyLine.text+="!attend {eventId} - Add your presence to the specified event"+"\n";
     replyLine.text+="!cancel {eventId} - Remove your participation to the specified event"+"\n";
     sendReply=true;
