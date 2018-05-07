@@ -194,7 +194,7 @@ function handleEvent(event) {
     var eventId=input[1];
     console.log("attend event");
     console.log("input id:"+eventId);
-    lineclient.getGroupMemberIds(groupId,userId)
+    lineclient.getGroupMemberIds(groupId)
     .then((res) => {
       console.log("groupmemberids:"+res);
     })
@@ -202,16 +202,16 @@ function handleEvent(event) {
       console.log(err);
     });
     // getUserInfos()
-    lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
-      username=profile.displayName;
-      console.log("Attend for username:"+username);
-      addAttendeesEntry(username,eventId);
-      lineclient.replyMessage(event.replyToken, replyLine);
-    })
-    .catch((err) => {
-      console.log("error trying to add attendees for eventID:"+eventId);
-      console.log("error:"+err);
-    });
+    // lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
+    //   username=profile.displayName;
+    //   console.log("Attend for username:"+username);
+    //   addAttendeesEntry(username,eventId);
+    //   lineclient.replyMessage(event.replyToken, replyLine);
+    // })
+    // .catch((err) => {
+    //   console.log("error trying to add attendees for eventID:"+eventId);
+    //   console.log("error:"+err);
+    // });
   }
   else if(event.message.text.includes('!cancel'))
   {
