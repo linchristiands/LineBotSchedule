@@ -98,19 +98,19 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!modify'))
   {
-    replyLine.text="Detect user request to modify event specified";
-    // var idToModify=input[1];
-    // var name=input[2];
-    // var place=input[3];
-    // var date=input[4];
-    // var LineEvent={
-    //   name:name,
-    //   place:place,
-    //   date:date,
-    //   attendees:[],
-    // };
+    var eventId=input[1];
+    var varToModify=input[2];
+    var newValue=input[3];
+    switch(varToModify)
+    {
+     case "n":modifyName(newValue);break;
+     case "p":modifyPlace(newValue);break;
+     case "d":modifyDate(newValue);break;
+     case "g":modifyGps(newValue);break;
+     default:break;
+    }
+    replyLine.text="Event "+eventId+" has been modified";
     console.log("Modify event");
-    // console.log("input name:"+name);
     sendReply=true;
   }
   else if(event.message.text.includes('!del'))
@@ -226,7 +226,7 @@ function handleEvent(event) {
   {
     replyLine.text="Commands to use the bot :"+"\n";
     replyLine.text+="!add {eventName} {place} {date(YYYY-MM-DD)} {gps location (optional)} - Add event"+"\n";
-    // replyLine.text+="!modify {eventId} {eventName} {place} {date(YYYY-MM-DD)} - Modify event"+"\n";
+    replyLine.text+="!modify {eventId}{n(ame),p(lace),d(ate),g(ps)}{value}- Modify event"+"\n";
     replyLine.text+="!del {eventId} - Delete event"+"\n";
     replyLine.text+="!all - Show all the events planned"+"\n";
     replyLine.text+="!show {eventId} - Show the specified event "+"\n";
@@ -276,9 +276,26 @@ function insertEntry(name,place,date,gps)
   client.querySync('INSERT INTO events (name,place,date,gps,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[]);');
 }
 
-function modifyEntry(eventId,name,place,date)
+function modifyEntry(eventId,name,place,date,gps)
 {
-  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\'+ where id=+'+eventId+';');
+  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\',gps=\''+gps+'\'where id='+eventId+';');
+}
+
+function modifyName(eventId,name,place,date)
+{
+  client.querySync('update events set name=\''+name+'\' where id='+eventId+';');
+}
+function modifyDate(eventId,name,place,date)
+{
+  client.querySync('update events set date=\''+date+'\'where id='+eventId+';');
+}
+function modifyPlace(eventId,name,place,date)
+{
+  client.querySync('update events set place=\''+place+'\'where id='+eventId+';');
+}
+function modifyGps(eventId,gps)
+{
+  client.querySync('update events set gps=\''+gps+'\' where id='+eventId+';');
 }
 
 function getInfoEntry(eventId){
