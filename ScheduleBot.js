@@ -73,17 +73,22 @@ function handleEvent(event) {
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
   var input=[];
-  
-  input=event.message.text.split(/[ ]+/).replace(/'/g, "\\'");
+  input=event.message.text.trim().split(/[ ]+/).replace(/'/g, "\\'");
+  console.log("UserMsg:"+event.message.text);
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
   if(event.message.text.includes('!add')&&(input.length>3)) // if add and params are well defined add to array
   {
-    var name=input[2];
-    var place=input[3];
-    var date=input[4];
-    var gps=input[5];
+    var name=input[1];
+    var place=input[2];
+    var date=input[3];
+    var gps=input[4];
     var d=date.split("-");
+    console.log("Add event");
+    console.log("input name:"+name);
+    console.log("input place:"+place);
+    console.log("input date:"+date);
+    console.log("input name:"+gps);
     var formattedDate = new Date(d[0],d[1],d[2]);
     if(gps==undefined)
       gps="";
@@ -104,20 +109,26 @@ function handleEvent(event) {
     //   date:date,
     //   attendees:[],
     // };
+    console.log("Modify event");
+    // console.log("input name:"+name);
     sendReply=true;
   }
   else if(event.message.text.includes('!del'))
   {
-    var id=input[2];
-    deleteEntry(id);
-    replyLine.text="Event "+id +" has been deleted";
+    var eventId=input[1];
+    console.log("Delete event");
+    console.log("input id:"+eventId);
+    deleteEntry(eventId);
+    replyLine.text="Event "+eventId +" has been deleted";
     sendReply=true;
   }
   else if(event.message.text.includes('!show')&&(input!=undefined))
   {
     loadDB();
-    var id=input[2];
-    var foundData=search(saveData,id);
+    var eventId=input[1];
+    console.log("show event");
+    console.log("input id:"+eventId);
+    var foundData=search(saveData,eventId);
     var txtEventList="";
     if(foundData!=undefined){
     var formatDate=new Date(foundData.date);
@@ -132,7 +143,10 @@ function handleEvent(event) {
     {
       txtEventList+= "Attendees : ";
       for(var a of foundData.attendees){
-      txtEventList+=a +"\n";
+      txtEventList+=a;
+      
+      if(foundData.attendees[foundData.attendees.length-1]!=a)
+        txtEventList+=" - ";
       }
     }
     replyLine.text=txtEventList;
@@ -146,6 +160,7 @@ function handleEvent(event) {
   else if(event.message.text.includes('!all'))
   {
     loadDB();
+    console.log("show all event");
     if(saveData.length<=0){
       replyLine.text="No event planned so far";
       sendReply=true;
@@ -178,22 +193,26 @@ function handleEvent(event) {
   {
    
     // get userName and add to attendees list
-    var eventId=input[2];
-    // getUserInfos()
-    lineclient.getProfile(userId)
-    .then((profile) => {
+    var eventId=input[1];
+    console.log("attend event");
+    console.log("input id:"+eventId);
+    lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
       username=profile.displayName;
+      console.log("Attend for username:"+username);
       addAttendeesEntry(username,eventId);
       lineclient.replyMessage(event.replyToken, replyLine);
     })
     .catch((err) => {
-      // error handling
+      console.log("error trying to add attendees for eventID:"+eventId);
+      console.log("error:"+err);
     });
   }
   else if(event.message.text.includes('!cancel'))
   {
-    var eventId=input[2];
-    lineclient.getProfile(userId)
+    var eventId=input[1];
+    console.log("cancel event");
+    console.log("input id:"+eventIdid);
+    lineclient.getGroupMemberProfile(groupId,userId)
     .then((profile) => {
       username=profile.displayName;
       removeAttendeesEntry(username,eventId);
@@ -207,11 +226,11 @@ function handleEvent(event) {
   {
     replyLine.text="Commands to use the bot :"+"\n";
     replyLine.text+="!add {eventName} {place} {date(YYYY-MM-DD)} {gps location (optional)} - Add event"+"\n";
-    replyLine.text+="!modify {eventId} {eventName} {place} {date(YYYY-MM-DD)} - Modify event"+"\n";
+    // replyLine.text+="!modify {eventId} {eventName} {place} {date(YYYY-MM-DD)} - Modify event"+"\n";
     replyLine.text+="!del {eventId} - Delete event"+"\n";
     replyLine.text+="!all - Show all the events planned"+"\n";
     replyLine.text+="!show {eventId} - Show the specified event "+"\n";
-    replyLine.text+="!showattendees {eventId} - Show the specified event "+"\n";
+    // replyLine.text+="!showattendees {eventId} - Show the specified event "+"\n";
     replyLine.text+="!attend {eventId} - Add your presence to the specified event"+"\n";
     replyLine.text+="!cancel {eventId} - Remove your participation to the specified event"+"\n";
     sendReply=true;
