@@ -103,10 +103,10 @@ function handleEvent(event) {
     var newValue=input[3];
     switch(varToModify)
     {
-     case "n":modifyName(newValue);break;
-     case "p":modifyPlace(newValue);break;
-     case "d":modifyDate(newValue);break;
-     case "g":modifyGps(newValue);break;
+     case "n":modifyName(eventId,newValue);break;
+     case "p":modifyPlace(eventId,newValue);break;
+     case "d":modifyDate(eventId,newValue);break;
+     case "g":modifyGps(eventId,newValue);break;
      default:break;
     }
     replyLine.text="Event "+eventId+" has been modified";
@@ -281,15 +281,15 @@ function modifyEntry(eventId,name,place,date,gps)
   client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\',gps=\''+gps+'\'where id='+eventId+';');
 }
 
-function modifyName(eventId,name,place,date)
+function modifyName(eventId,name)
 {
   client.querySync('update events set name=\''+name+'\' where id='+eventId+';');
 }
-function modifyDate(eventId,name,place,date)
+function modifyDate(eventId,date)
 {
   client.querySync('update events set date=\''+date+'\'where id='+eventId+';');
 }
-function modifyPlace(eventId,name,place,date)
+function modifyPlace(eventId,place)
 {
   client.querySync('update events set place=\''+place+'\'where id='+eventId+';');
 }
