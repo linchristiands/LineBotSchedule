@@ -73,7 +73,7 @@ function handleEvent(event) {
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
   var input=[];
-  input=event.message.text.replace(/'/g, "\'").trim().split(/[ ]+/);
+  input=event.message.text.trim().split(/[ ]+/);
   console.log("UserMsg:"+event.message.text);
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
