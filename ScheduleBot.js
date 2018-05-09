@@ -74,7 +74,7 @@ function handleEvent(event) {
   }
   var input=[];
   
-  input=event.message.text.split(/[ ]+/);
+  input=event.message.text.split(/[ ]+/).replace(/'/g, "\\'");
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
   if(event.message.text.includes('!add')&&(input.length>3)) // if add and params are well defined add to array
@@ -253,7 +253,7 @@ function loadDB()
 }
 
 function insertEntry(name,place,date,gps)
-{
+{0
   client.querySync('INSERT INTO events (name,place,date,gps,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[]);');
 }
 
@@ -295,8 +295,7 @@ function deleteEntry(eventId){
   client.querySync('delete from events where id='+eventId+";");
 }
 
-function resetDB()
-{
+function resetDB(){
   client.querySync('DELETE FROM events;');
 }
 
