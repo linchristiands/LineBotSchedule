@@ -311,7 +311,7 @@ function loadAll()
 function loadDB(groupid)
 {
   saveData=[];
-  const rows= client.querySync('select * from events where groupid='+groupid+';');
+  const rows= client.querySync('select * from events where groupid=\''+groupid+'\';');
   for (let row of rows) {
     console.log(JSON.stringify(row));
     saveData.push(row);
