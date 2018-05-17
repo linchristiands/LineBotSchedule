@@ -81,6 +81,7 @@ function handleEvent(event) {
   var input=[];
   input=event.message.text.trim().split(/[ ]+/);
   console.log("UserMsg:"+event.message.text);
+  console.log("UserId:"+userId);
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
   if(event.message.text.includes('!add')&&(input.length>3)) // if add and params are well defined add to array
