@@ -323,7 +323,7 @@ function loadDB(groupid)
 
 function insertEntry(name,place,date,gps,createdby,groupid)
 {
-  client.querySync('INSERT INTO events (id,name,place,date,gps,attendees,createdby,groupid) VALUES ((SELECT COUNT(events.id) from events where groupid='+groupid+'),\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[],\''+createdby+'\',\''+groupid+'\');');
+  client.querySync('INSERT INTO events (id,name,place,date,gps,attendees,createdby,groupid) VALUES ((SELECT COUNT(events.id) from events where groupid=\''+groupid+'\'),\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[],\''+createdby+'\',\''+groupid+'\');');
 }
 
 function modifyEntry(eventId,name,place,date,gps,groupid)
