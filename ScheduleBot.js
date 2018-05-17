@@ -247,27 +247,33 @@ function handleEvent(event) {
    // Clear cache data
   //  save(saveData);
   }
-  else if(event.message.text.includes('!database')&&userId=='Uf9dbaca29d6a4e45f6e9ca9df122cb4c')
+  else if (event.message.text.includes('!database') && userId == 'Uf9dbaca29d6a4e45f6e9ca9df122cb4c') 
   {
-   loadAll();
-   var txtEventList="";
-   replyLine.text="Event List : "+"\n";
-   var sortedData=saveData.sort(function(a,b){
-     return new Date(a.date) - new Date(b.date);
-   });
-   
-   for(var i=0;i<sortedData.length;i++)
-   {
-     var element=sortedData[i];
-     console.log("Element : %j",element);
-     var formatDate=new Date(element.date);
-     var month=formatDate.getUTCMonth()+1;
-     var date=formatDate.getDate();
-     // txtEventList+= element.id+" - "+element.name+" - "+element.place+" - "+formatDate.getFullYear()+"-"+month+"-"+formatDate.getDate()+"\n";
-     txtEventList+= element.id+" - "+element.name+" - "+formatDate.getFullYear()+"-"+month+"-"+formatDate.getDate()+"\n";
+    loadAll();
+    if (saveData.length <= 0) {
+      replyLine.text = "No event planned so far";
+      sendReply = true;
+      console.log("Empty");
     }
-   replyLine.text+=txtEventList;
-   sendReply=true;
+    else {
+      var txtEventList = "";
+      replyLine.text = "Event List : " + "\n";
+      var sortedData = saveData.sort(function (a, b) {
+        return new Date(a.date) - new Date(b.date);
+      });
+
+      for (var i = 0; i < sortedData.length; i++) {
+        var element = sortedData[i];
+        console.log("Element : %j", element);
+        var formatDate = new Date(element.date);
+        var month = formatDate.getUTCMonth() + 1;
+        var date = formatDate.getDate();
+        // txtEventList+= element.id+" - "+element.name+" - "+element.place+" - "+formatDate.getFullYear()+"-"+month+"-"+formatDate.getDate()+"\n";
+        txtEventList += element.id + " - " + element.name + " - " + formatDate.getFullYear() + "-" + month + "-" + formatDate.getDate() + "\n";
+      }
+      replyLine.text += txtEventList;
+      sendReply = true;
+    }
   }
   // use reply API
   //client.end();
