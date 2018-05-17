@@ -72,11 +72,6 @@ function handleEvent(event) {
     groupId=event.source.groupId;
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
-  lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
-    username=profile.displayName;
-  })
-  .catch((err) => {
-  });
 
   var input=[];
   input=event.message.text.trim().split(/[ ]+/);
@@ -84,24 +79,30 @@ function handleEvent(event) {
   // console.log("UserId:"+userId);
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
-  if(event.message.text.includes('!add')&&(input.length>3)) // if add and params are well defined add to array
+  if (event.message.text.includes('!add') && (input.length > 3)) // if add and params are well defined add to array
   {
-    var name=input[1];
-    var place=input[2];
-    var date=input[3];
-    var gps=input[4];
-    var d=date.split("-");
+    var name = input[1];
+    var place = input[2];
+    var date = input[3];
+    var gps = input[4];
+    var d = date.split("-");
     console.log("Add event");
-    console.log("input name:"+name);
-    console.log("input place:"+place);
-    console.log("input date:"+date);
-    console.log("input name:"+gps);
-    var formattedDate = new Date(d[0],d[1],d[2]);
-    if(gps==undefined)
-      gps="";
-    insertEntry(name,place,date,gps,username,groupId);
-    replyLine.text="Event added";
-    sendReply=true;
+    console.log("input name:" + name);
+    console.log("input place:" + place);
+    console.log("input date:" + date);
+    console.log("input name:" + gps);
+    var formattedDate = new Date(d[0], d[1], d[2]);
+    if (gps == undefined)
+      gps = "";
+
+    lineclient.getGroupMemberProfile(groupId, userId).then((profile) => {
+      username = profile.displayName;
+      insertEntry(name, place, date, gps, username, groupId);
+      replyLine.text = "Event added";
+      sendReply = true;
+    })
+      .catch((err) => {
+      });
   }
   else if(event.message.text.includes('!modify'))
   {
@@ -201,33 +202,33 @@ function handleEvent(event) {
    
     // get userName and add to attendees list
     var eventId=input[1];
-    // console.log("attend event");
-    // console.log("input id:"+eventId);
-    // lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
-      // username=profile.displayName;
-      // console.log("Attend for username:"+username);
+    console.log("attend event");
+    console.log("input id:"+eventId);
+    lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
+      username=profile.displayName;
+      console.log("Attend for username:"+username);
       addAttendeesEntry(username,eventId,groupId);
       lineclient.replyMessage(event.replyToken, replyLine);
-    // })
-    // .catch((err) => {
-    //   console.log("error trying to add attendees for eventID:"+eventId);
-    //   console.log("error:"+err);
-    // });
+    })
+    .catch((err) => {
+      console.log("error trying to add attendees for eventID:"+eventId);
+      console.log("error:"+err);
+    });
   }
   else if(event.message.text.includes('!cancel'))
   {
     var eventId=input[1];
-    // console.log("cancel event");
-    // console.log("input id:"+eventIdid);
-    // lineclient.getGroupMemberProfile(groupId,userId)
-    // .then((profile) => {
-      // username=profile.displayName;
+    console.log("cancel event");
+    console.log("input id:"+eventIdid);
+    lineclient.getGroupMemberProfile(groupId,userId)
+    .then((profile) => {
+      username=profile.displayName;
       removeAttendeesEntry(username,eventId,groupId);
       lineclient.replyMessage(event.replyToken, replyLine);
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
   else if(event.message.text.includes('!commands'))
   {
@@ -320,7 +321,7 @@ function loadDB(groupid)
 
 function insertEntry(name,place,date,gps,createdby,groupid)
 {
-  client.querySync('INSERT INTO events (id,name,place,date,gps,attendees,createdby,groupid) VALUES ((SELECT COUNT(events.id) from events where groupid='+groupid+'),\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[],\''+createdby+'\',\''+groupid+'\';');
+  client.querySync('INSERT INTO events (id,name,place,date,gps,attendees,createdby,groupid) VALUES ((SELECT COUNT(events.id) from events where groupid='+groupid+'),\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[],\''+createdby+'\',\''+groupid+'\');');
 }
 
 function modifyEntry(eventId,name,place,date,gps,groupid)
