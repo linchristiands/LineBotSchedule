@@ -102,6 +102,7 @@ function handleEvent(event) {
       sendReply = true;
     })
       .catch((err) => {
+        console.log("error:"+err);
       });
   }
   else if(event.message.text.includes('!modify'))
@@ -227,7 +228,8 @@ function handleEvent(event) {
       lineclient.replyMessage(event.replyToken, replyLine);
     })
     .catch((err) => {
-      console.log(err);
+      console.log("error trying to remove attendees for eventID:"+eventId);
+      console.log("error:"+err);
     });
   }
   else if(event.message.text.includes('!commands'))
