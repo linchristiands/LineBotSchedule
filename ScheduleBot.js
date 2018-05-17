@@ -328,34 +328,34 @@ function insertEntry(name,place,date,gps,createdby,groupid)
 
 function modifyEntry(eventId,name,place,date,gps,groupid)
 {
-  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\',gps=\''+gps+'\'where id='+eventId+' and groupid='+groupid+';');
+  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\',gps=\''+gps+'\'where id='+eventId+' and groupid=\''+groupid+'\';');
 }
 
 function modifyName(eventId,name,groupid)
 {
-  client.querySync('update events set name=\''+name+'\' where id='+eventId+' and groupid='+groupid+';');
+  client.querySync('update events set name=\''+name+'\' where id='+eventId+' and groupid=\''+groupid+'\';');
 }
 function modifyDate(eventId,date,groupid)
 {
-  client.querySync('update events set date=\''+date+'\'where id='+eventId+' and groupid='+groupid+';');
+  client.querySync('update events set date=\''+date+'\'where id='+eventId+' and groupid=\''+groupid+'\';');
 }
 function modifyPlace(eventId,place,groupid)
 {
-  client.querySync('update events set place=\''+place+'\'where id='+eventId+' and groupid='+groupid+';');
+  client.querySync('update events set place=\''+place+'\'where id='+eventId+' and groupid=\''+groupid+'\';');
 }
 function modifyGps(eventId,gps,groupid)
 {
-  client.querySync('update events set gps=\''+gps+'\' where id='+eventId+' and groupid='+groupid+';');
+  client.querySync('update events set gps=\''+gps+'\' where id='+eventId+' and groupid=\''+groupid+'\';');
 }
 
 function getInfoEntry(eventId,groupid)
 {
-  return client.querySync('select * from events where id='+eventId+' and groupid='+groupid+';');
+  return client.querySync('select * from events where id='+eventId+' and groupid=\''+groupid+'\';');
 }
 
 function getAttendeesEntry(eventId,groupid)
 {
-  var row=client.querySync('select attendees from events where id='+eventId+' and groupid='+groupid+';');
+  var row=client.querySync('select attendees from events where id='+eventId+' and groupid=\''+groupid+'\';');
   return row;
 }
 
@@ -369,19 +369,19 @@ function addAttendeesEntry(name,eventId,groupid)
   }
   else{
     // not on the in list
-    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\') where id='+eventId+' and groupid='+groupid+';');
+    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\') where id='+eventId+' and groupid=\''+groupid+'\';');
     replyLine.text="Confirming participation for "+name+" at event "+eventId;
   } 
 }
 
 function removeAttendeesEntry(name,eventId,groupid){
-  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+' and groupid='+groupid+';');
+  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+' and groupid=\''+groupid+'\';');
   replyLine.text="Confirming cancellation for "+name+" at event "+eventId;
 }
 
 
 function deleteEntry(eventId,groupid){
-  client.querySync('delete from events where id='+eventId+' and groupid='+groupid+';');
+  client.querySync('delete from events where id='+eventId+' and groupid=\''+groupid+'\';');
 }
 
 function resetDB(){
