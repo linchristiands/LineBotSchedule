@@ -363,7 +363,7 @@ function addAttendeesEntry(name,eventId,groupid)
 {
   var res=getAttendeesEntry(eventId);
   var i =res[0];
-  if(i.attendees.indexOf(name)>-1){
+  if(i!=undefined && i.attendees.indexOf(name)>-1 ){
     // in array
     replyLine.text="You are already participating in the event "+eventId;
   }
