@@ -99,7 +99,7 @@ function handleEvent(event) {
       username = profile.displayName;
       insertEntry(name, place, date, gps, username, groupId);
       replyLine.text = "Event added";
-      sendReply = true;
+      lineclient.replyMessage(event.replyToken, replyLine);
     })
       .catch((err) => {
         console.log("error:"+err);
