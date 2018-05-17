@@ -81,7 +81,7 @@ function handleEvent(event) {
   var input=[];
   input=event.message.text.trim().split(/[ ]+/);
   console.log("UserMsg:"+event.message.text);
-  console.log("UserId:"+userId);
+  // console.log("UserId:"+userId);
   replyLine = { type: 'text', text: event.message.text };
   replyLine.text="";
   if(event.message.text.includes('!add')&&(input.length>3)) // if add and params are well defined add to array
@@ -247,7 +247,7 @@ function handleEvent(event) {
    // Clear cache data
   //  save(saveData);
   }
-  else if(event.message.text.includes('!database')&&userId=='')
+  else if(event.message.text.includes('!database')&&userId=='Uf9dbaca29d6a4e45f6e9ca9df122cb4c')
   {
    loadAll();
    var txtEventList="";
