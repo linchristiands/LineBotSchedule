@@ -72,6 +72,12 @@ function handleEvent(event) {
     groupId=event.source.groupId;
     console.log("Message from userid :"+userId+ " in group :"+groupId);
   }
+  lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
+    username=profile.displayName;
+  })
+  .catch((err) => {
+  });
+
   var input=[];
   input=event.message.text.trim().split(/[ ]+/);
   console.log("UserMsg:"+event.message.text);
@@ -92,7 +98,7 @@ function handleEvent(event) {
     var formattedDate = new Date(d[0],d[1],d[2]);
     if(gps==undefined)
       gps="";
-    insertEntry(name,place,date,gps);
+    insertEntry(name,place,date,gps,username,groupId);
     replyLine.text="Event added";
     sendReply=true;
   }
@@ -103,10 +109,10 @@ function handleEvent(event) {
     var newValue=input[3];
     switch(varToModify)
     {
-     case "n":modifyName(eventId,newValue);break;
-     case "p":modifyPlace(eventId,newValue);break;
-     case "d":modifyDate(eventId,newValue);break;
-     case "g":modifyGps(eventId,newValue);break;
+     case "n":modifyName(eventId,newValue,groupId);break;
+     case "p":modifyPlace(eventId,newValue,groupId);break;
+     case "d":modifyDate(eventId,newValue,groupId);break;
+     case "g":modifyGps(eventId,newValue,groupId);break;
      default:break;
     }
     replyLine.text="Event "+eventId+" has been modified";
@@ -118,13 +124,13 @@ function handleEvent(event) {
     var eventId=input[1];
     console.log("Delete event");
     console.log("input id:"+eventId);
-    deleteEntry(eventId);
+    deleteEntry(eventId,groupId);
     replyLine.text="Event "+eventId +" has been deleted";
     sendReply=true;
   }
   else if(event.message.text.includes('!show')&&(input!=undefined))
   {
-    loadDB();
+    loadDB(groupId);
     var eventId=input[1];
     console.log("show event");
     console.log("input id:"+eventId);
@@ -159,7 +165,7 @@ function handleEvent(event) {
   }
   else if(event.message.text.includes('!all'))
   {
-    loadDB();
+    loadDB(groupId);
     console.log("show all event");
     if(saveData.length<=0){
       replyLine.text="No event planned so far";
@@ -194,33 +200,33 @@ function handleEvent(event) {
    
     // get userName and add to attendees list
     var eventId=input[1];
-    console.log("attend event");
-    console.log("input id:"+eventId);
-    lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
-      username=profile.displayName;
-      console.log("Attend for username:"+username);
-      addAttendeesEntry(username,eventId);
+    // console.log("attend event");
+    // console.log("input id:"+eventId);
+    // lineclient.getGroupMemberProfile(groupId,userId).then((profile) => {
+      // username=profile.displayName;
+      // console.log("Attend for username:"+username);
+      addAttendeesEntry(username,eventId,groupId);
       lineclient.replyMessage(event.replyToken, replyLine);
-    })
-    .catch((err) => {
-      console.log("error trying to add attendees for eventID:"+eventId);
-      console.log("error:"+err);
-    });
+    // })
+    // .catch((err) => {
+    //   console.log("error trying to add attendees for eventID:"+eventId);
+    //   console.log("error:"+err);
+    // });
   }
   else if(event.message.text.includes('!cancel'))
   {
     var eventId=input[1];
-    console.log("cancel event");
-    console.log("input id:"+eventIdid);
-    lineclient.getGroupMemberProfile(groupId,userId)
-    .then((profile) => {
-      username=profile.displayName;
-      removeAttendeesEntry(username,eventId);
+    // console.log("cancel event");
+    // console.log("input id:"+eventIdid);
+    // lineclient.getGroupMemberProfile(groupId,userId)
+    // .then((profile) => {
+      // username=profile.displayName;
+      removeAttendeesEntry(username,eventId,groupId);
       lineclient.replyMessage(event.replyToken, replyLine);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
   }
   else if(event.message.text.includes('!commands'))
   {
@@ -240,7 +246,28 @@ function handleEvent(event) {
    // Clear cache data
   //  save(saveData);
   }
-
+  else if(event.message.text.includes('!database')&&userId=='')
+  {
+   loadAll();
+   var txtEventList="";
+   replyLine.text="Event List : "+"\n";
+   var sortedData=saveData.sort(function(a,b){
+     return new Date(a.date) - new Date(b.date);
+   });
+   
+   for(var i=0;i<sortedData.length;i++)
+   {
+     var element=sortedData[i];
+     console.log("Element : %j",element);
+     var formatDate=new Date(element.date);
+     var month=formatDate.getUTCMonth()+1;
+     var date=formatDate.getDate();
+     // txtEventList+= element.id+" - "+element.name+" - "+element.place+" - "+formatDate.getFullYear()+"-"+month+"-"+formatDate.getDate()+"\n";
+     txtEventList+= element.id+" - "+element.name+" - "+formatDate.getFullYear()+"-"+month+"-"+formatDate.getDate()+"\n";
+    }
+   replyLine.text+=txtEventList;
+   sendReply=true;
+  }
   // use reply API
   //client.end();
   if(sendReply)
@@ -258,7 +285,7 @@ function handleEvent(event) {
 //   return initArray;
 // }
 
-function loadDB()
+function loadAll()
 {
   saveData=[];
   const rows= client.querySync('select * from events;');
@@ -271,43 +298,59 @@ function loadDB()
   }
 }
 
-function insertEntry(name,place,date,gps)
-{0
-  client.querySync('INSERT INTO events (name,place,date,gps,attendees) VALUES (\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[]);');
+function loadDB(groupid)
+{
+  saveData=[];
+  const rows= client.querySync('select * from events where groupid='+groupid+';');
+  for (let row of rows) {
+    console.log(JSON.stringify(row));
+    saveData.push(row);
+  }
+  for(var item of saveData){
+    console.log(JSON.stringify(item));
+  }
 }
 
-function modifyEntry(eventId,name,place,date,gps)
+function insertEntry(name,place,date,gps,createdby,groupid)
 {
-  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\',gps=\''+gps+'\'where id='+eventId+';');
+  client.querySync('INSERT INTO events (id,name,place,date,gps,attendees,createdby,groupid) VALUES ((SELECT COUNT(events.id) from events where groupid='+groupid+'),\''+name+'\',\''+place+'\',\''+date+'\',\''+gps+'\',array[]::text[]),\''+createdby+'\',\''+groupid+';');
 }
 
-function modifyName(eventId,name)
+function modifyEntry(eventId,name,place,date,gps,groupid)
 {
-  client.querySync('update events set name=\''+name+'\' where id='+eventId+';');
-}
-function modifyDate(eventId,date)
-{
-  client.querySync('update events set date=\''+date+'\'where id='+eventId+';');
-}
-function modifyPlace(eventId,place)
-{
-  client.querySync('update events set place=\''+place+'\'where id='+eventId+';');
-}
-function modifyGps(eventId,gps)
-{
-  client.querySync('update events set gps=\''+gps+'\' where id='+eventId+';');
+  client.querySync('update events set name=\''+name+'\',place=\''+place+'\',date=\''+date+'\',gps=\''+gps+'\'where id='+eventId+' and groupid='+groupid+';');
 }
 
-function getInfoEntry(eventId){
-  return client.querySync('select * from events where id='+eventId+';');
+function modifyName(eventId,name,groupid)
+{
+  client.querySync('update events set name=\''+name+'\' where id='+eventId+' and groupid='+groupid+';');
+}
+function modifyDate(eventId,date,groupid)
+{
+  client.querySync('update events set date=\''+date+'\'where id='+eventId+' and groupid='+groupid+';');
+}
+function modifyPlace(eventId,place,groupid)
+{
+  client.querySync('update events set place=\''+place+'\'where id='+eventId+' and groupid='+groupid+';');
+}
+function modifyGps(eventId,gps,groupid)
+{
+  client.querySync('update events set gps=\''+gps+'\' where id='+eventId+' and groupid='+groupid+';');
 }
 
-function getAttendeesEntry(eventId){
-  var row=client.querySync('select attendees from events where id='+eventId+';');
+function getInfoEntry(eventId,groupid)
+{
+  return client.querySync('select * from events where id='+eventId+' and groupid='+groupid+';');
+}
+
+function getAttendeesEntry(eventId,groupid)
+{
+  var row=client.querySync('select attendees from events where id='+eventId+' and groupid='+groupid+';');
   return row;
 }
 
-function addAttendeesEntry(name,eventId){
+function addAttendeesEntry(name,eventId,groupid)
+{
   var res=getAttendeesEntry(eventId);
   var i =res[0];
   if(i.attendees.indexOf(name)>-1){
@@ -316,19 +359,19 @@ function addAttendeesEntry(name,eventId){
   }
   else{
     // not on the in list
-    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\') where id='+eventId+';');
+    client.querySync('update events set attendees = array_cat(attendees,\'{'+name+'}\') where id='+eventId+' and groupid='+groupid+';');
     replyLine.text="Confirming participation for "+name+" at event "+eventId;
   } 
 }
 
-function removeAttendeesEntry(name,eventId){
-  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+';');
+function removeAttendeesEntry(name,eventId,groupid){
+  client.querySync('update events set attendees = array_remove(attendees, \''+name+'\') where id='+eventId+' and groupid='+groupid+';');
   replyLine.text="Confirming cancellation for "+name+" at event "+eventId;
 }
 
 
-function deleteEntry(eventId){
-  client.querySync('delete from events where id='+eventId+";");
+function deleteEntry(eventId,groupid){
+  client.querySync('delete from events where id='+eventId+' and groupid='+groupid+';');
 }
 
 function resetDB(){
