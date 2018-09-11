@@ -112,6 +112,7 @@ function handleEvent(event) {
         })
           .catch((err) => {
             console.log("error:"+err);
+            console.log("Failed to getprofile");
           });
       });
   }
