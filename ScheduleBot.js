@@ -90,7 +90,7 @@ function handleEvent(event) {
     console.log("input name:" + name);
     console.log("input place:" + place);
     console.log("input date:" + date);
-    console.log("input name:" + gps);
+    console.log("input gps:" + gps);
     var formattedDate = new Date(d[0], d[1], d[2]);
     if (gps == undefined)
       gps = "";
@@ -103,6 +103,16 @@ function handleEvent(event) {
     })
       .catch((err) => {
         console.log("error:"+err);
+        console.log("Failed to getmemberprofile");
+        lineclient.getProfile(userId).then((profile) => {
+          username = profile.displayName;
+          insertEntry(name, place, date, gps, username, groupId);
+          replyLine.text = "Event added";
+          lineclient.replyMessage(event.replyToken, replyLine);
+        })
+          .catch((err) => {
+            console.log("error:"+err);
+          });
       });
   }
   else if(event.message.text.includes('!modify'))
@@ -220,7 +230,7 @@ function handleEvent(event) {
   {
     var eventId=input[1];
     console.log("cancel event");
-    console.log("input id:"+eventIdid);
+    console.log("input id:"+eventId);
     lineclient.getGroupMemberProfile(groupId,userId)
     .then((profile) => {
       username=profile.displayName;
@@ -245,7 +255,7 @@ function handleEvent(event) {
     replyLine.text+="!cancel {eventId} - Remove your participation to the specified event"+"\n";
     sendReply=true;
   }
-  else if(event.message.text.includes('!clearAdmin'))
+  else if(event.message.text.includes('!clearAdmin')&& userId == 'Uf9dbaca29d6a4e45f6e9ca9df122cb4c')
   {
    // Clear cache data
   //  save(saveData);
