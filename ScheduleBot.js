@@ -103,17 +103,6 @@ function handleEvent(event) {
     })
       .catch((err) => {
         console.log("error:"+err);
-        console.log("Failed to getmemberprofile");
-        lineclient.getProfile(userId).then((profile) => {
-          username = profile.displayName;
-          insertEntry(name, place, date, gps, username, groupId);
-          replyLine.text = "Event added";
-          lineclient.replyMessage(event.replyToken, replyLine);
-        })
-          .catch((err) => {
-            console.log("error:"+err);
-            console.log("Failed to getprofile"); 
-          });
       });
   }
   else if(event.message.text.includes('!modify'))
