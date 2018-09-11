@@ -103,6 +103,7 @@ function handleEvent(event) {
     })
       .catch((err) => {
         console.log("error:"+err);
+
       });
   }
   else if(event.message.text.includes('!modify'))
