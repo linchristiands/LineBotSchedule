@@ -49,10 +49,6 @@ var replyLine;
 // event handler
 function handleEvent(event) {
   var sendReply=false;
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    // ignore non-text-message event
-    return Promise.resolve(null);
-  }
   var userId;
   var username;
   userId=event.source.userId;
