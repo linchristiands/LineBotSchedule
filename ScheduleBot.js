@@ -54,7 +54,7 @@ function handleEvent(event) {
   userId=event.source.userId;
   replyLine="Test Remindme";
   lineclient.replyMessage(event.replyToken, replyLine);
-  return;
+  console.log("echo");
 }
 
 // listen on port
