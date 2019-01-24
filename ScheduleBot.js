@@ -33,16 +33,6 @@ const lineclient = new line.Client(config);
 // about Express itself: https://expressjs.com/
 const app = express();
 
-// var eventModelData=
-// {
-//   id:"",
-//   name:"",
-//   attendees:[],
-//   place:"",
-//   date:"",
-//   gpslocation:,
-// };
-
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/callback', line.middleware(config), (req, res) => {
@@ -63,18 +53,10 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-  var groupId;
   var userId;
   var username;
   userId=event.source.userId;
-
-  console.log("Message from userid :"+userId);
-  var input=[];
-  input=event.message.text.trim().split(/[ ]+/);
-  console.log("UserMsg:"+event.message.text);
-  // console.log("UserId:"+userId);
-  replyLine = { type: 'text', text: event.message.text };
-  replyLine.text="Test Remindme";
+  replyLine="Test Remindme";
   lineclient.replyMessage(event.replyToken, replyLine);
   return;
 }
