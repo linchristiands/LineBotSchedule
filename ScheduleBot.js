@@ -58,6 +58,7 @@ app.post('/callback', line.middleware(config), (req, res) => {
 var replyLine;
 // event handler
 function handleEvent(event) {
+  var sendReply=false;
   if (event.type !== 'message' || event.message.type !== 'text') {
     // ignore non-text-message event
     return Promise.resolve(null);
@@ -73,8 +74,9 @@ function handleEvent(event) {
   console.log("UserMsg:"+event.message.text);
   // console.log("UserId:"+userId);
   replyLine = { type: 'text', text: event.message.text };
-  replyLine.text="test";
+  replyLine.text="Test Remindme";
   lineclient.replyMessage(event.replyToken, replyLine);
+  return;
 }
 
 // listen on port
