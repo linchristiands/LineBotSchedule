@@ -18,8 +18,8 @@
   },
   "homepage": "https://git.heroku.com/scdhelpbot#readme",
   "devDependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.16.4"
+    "body-parser": "*",
+    "express": "*"
   },
   "dependencies": {
     "@line/bot-sdk": "^6.0.1",
